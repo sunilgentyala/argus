@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+.venv/
+venv/
+*.log
+argus-reports/
+argus-memory.json
+argus.hitlog.jsonl
+coverage.xml
+.coverage
+.mypy_cache/
+.ruff_cache/
+bandit.sarif

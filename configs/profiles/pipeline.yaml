@@ -1,0 +1,16 @@
+# Pipeline scan profile — full multi-surface coverage.
+# Requires target instrumentation for behavioral trace analysis.
+scan:
+  profile: pipeline
+  payload_budget: 150
+  diversity_threshold: 0.30
+
+detection:
+  layers:
+    semantic:   true
+    llm_judge:  true
+    behavioral: true
+
+attack_scope:
+  owasp_categories: [LLM01, LLM02, LLM05, LLM07, LLM08]
+  surfaces: [direct, rag, mcp, multiagent, tool_use]

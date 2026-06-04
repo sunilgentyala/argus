@@ -1,0 +1,17 @@
+# Quick scan profile — ~15 minutes, high-severity vectors only.
+# Disables LLM judge (Layer 2) to reduce latency.
+scan:
+  profile: quick
+  payload_budget: 20
+  diversity_threshold: 0.35
+
+detection:
+  layers:
+    semantic:   true
+    llm_judge:  false
+    behavioral: false
+
+# Restrict to highest-impact OWASP categories
+attack_scope:
+  owasp_categories: [LLM01, LLM06, LLM08]
+  surfaces: [direct]

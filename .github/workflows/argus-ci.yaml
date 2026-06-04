@@ -1,0 +1,46 @@
+name: ARGUS CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check argus/
+      - run: mypy argus/
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: pytest tests/unit/ --cov=argus --cov-report=xml -q
+      - uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]" bandit
+      - run: bandit -r argus/ -ll -f sarif -o bandit.sarif || true
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bandit.sarif
