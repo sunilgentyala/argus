@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARGUS — Agentic Red-Team &amp; Governance Unified Scanner for LLM Security</title>
+  <meta name="description" content="ARGUS is an agentic multi-agent framework for autonomous LLM vulnerability discovery, CVSSv4.0 scoring, and regulatory compliance mapping." />
+  <style>
+    :root {
+      --bg:       #0b0e17;
+      --surface:  #111827;
+      --card:     #1a2236;
+      --border:   #1e3050;
+      --accent:   #00c8ff;
+      --accent2:  #7c3aed;
+      --green:    #22c55e;
+      --orange:   #f59e0b;
+      --red:      #ef4444;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --code-bg:  #0f172a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 2rem;
+      background: rgba(11,14,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.15em; color: var(--accent); }
+    .nav-links { display: flex; gap: 1.75rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    header {
+      text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      background: radial-gradient(ellipse at 50% 0%, #0d2040 0%, var(--bg) 70%);
+    }
+    .badge-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .badge { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.75rem; color: var(--muted); }
+    .badge span { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .badge .dot-green { background: var(--green); }
+    .badge .dot-blue  { background: var(--accent); }
+    .badge .dot-purple{ background: var(--accent2); }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    h1 .argus { color: var(--accent); }
+    .tagline { font-size: 1.1rem; color: var(--muted); max-width: 700px; margin: 0 auto 2.5rem; }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #000;
+      padding: 0.75rem 2rem; border-radius: 8px;
+      text-decoration: none; font-weight: 700; font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.75rem 2rem; border-radius: 8px;
+      text-decoration: none; font-weight: 600; font-size: 0.95rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 1.5rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h2 { font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .section-sub { color: var(--muted); margin-bottom: 2.5rem; }
+
+    /* ── ARCHITECTURE ── */
+    .arch-diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+    .arch-diagram pre {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+      line-height: 1.6;
+    }
+
+    /* ── AGENT CARDS ── */
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+    .agent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .agent-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .agent-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .agent-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--accent); }
+    .agent-card p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── FEATURE STRIPS ── */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .feature-card ul { list-style: none; }
+    .feature-card ul li { font-size: 0.85rem; color: var(--muted); padding: 0.2rem 0; }
+    .feature-card ul li::before { content: "→ "; color: var(--accent); }
+    .tag-label {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(0,200,255,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(0,200,255,0.3);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── COMPLIANCE PILLS ── */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+    .code-block pre {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      font-size: 0.83rem;
+      color: #94d8f7;
+      line-height: 1.7;
+    }
+    .code-block .comment { color: var(--muted); }
+    .code-block .cmd { color: var(--green); }
+
+    /* ── PROFILES TABLE ── */
+    .table-wrap { overflow-x: auto; margin-top: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th {
+      text-align: left; padding: 0.7rem 1rem;
+      background: var(--code-bg);
+      color: var(--accent);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    td { padding: 0.7rem 1rem; border-top: 1px solid var(--border); color: var(--muted); }
+    tr:hover td { background: var(--card); }
+
+    /* ── DETECTION STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+    .step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+    }
+    .step-num {
+      min-width: 36px; height: 36px;
+      background: rgba(0,200,255,0.1);
+      border: 1px solid rgba(0,200,255,0.3);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: var(--accent); font-size: 0.9rem;
+    }
+    .step h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .step p { font-size: 0.83rem; color: var(--muted); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── AUTHOR / FOOTER ── */
+    .author-section {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      background: radial-gradient(ellipse at 50% 100%, #0d2040 0%, var(--bg) 70%);
+    }
+    .author-avatar {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 1rem;
+    }
+    .author-name { font-size: 1.25rem; font-weight: 800; }
+    .author-title { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .author-links { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    .author-link {
+      color: var(--muted); text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.35rem 0.85rem;
+      font-size: 0.82rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .author-link:hover { color: var(--accent); border-color: var(--accent); }
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">ARGUS</span>
+  <div class="nav-links">
+    <a href="#architecture">Architecture</a>
+    <a href="#detection">Detection</a>
+    <a href="#compliance">Compliance</a>
+    <a href="#quickstart">Quick Start</a>
+    <a href="https://github.com/sunilgentyala/argus" target="_blank">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header>
+  <div class="badge-row">
+    <span class="badge"><span class="dot dot-green"></span>Open Source</span>
+    <span class="badge"><span class="dot dot-blue"></span>Python 3.11+</span>
+    <span class="badge"><span class="dot dot-purple"></span>Multi-Agent</span>
+    <span class="badge"><span class="dot dot-green"></span>CVSSv4.0</span>
+    <span class="badge"><span class="dot dot-blue"></span>OWASP LLM Top 10</span>
+  </div>
+  <h1><span class="argus">ARGUS</span></h1>
+  <p style="font-size:0.9rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem;">
+    Agentic Red-team &amp; Governance Unified Scanner
+  </p>
+  <p class="tagline">
+    Autonomous LLM security testing with closed-loop multi-agent reasoning,
+    novel payload synthesis, three-layer detection, and regulatory compliance mapping.
+  </p>
+  <div class="hero-cta">
+    <a href="#quickstart" class="btn-primary">Get Started</a>
+    <a href="https://github.com/sunilgentyala/argus" target="_blank" class="btn-secondary">View on GitHub</a>
+  </div>
+</header>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" style="background:var(--surface);">
+  <div class="container">
+    <h2>Architecture</h2>
+    <p class="section-sub">A closed-loop pipeline that reasons, synthesizes, evaluates, and reports — autonomously.</p>
+    <div class="arch-diagram">
+<pre>
+  Target LLM / Pipeline
+          |
+          v
+  ┌─────────────────────────────────────────────────┐
+  │              Orchestrator                       │
+  │                                                  │
+  │   Planner ──&gt; Attacker ──&gt; Evaluator            │
+  │      ^             |             |               │
+  │      |             v             v               │
+  │      └──── Revision &lt;── Findings + CVSS         │
+  │                                    |             │
+  │                               Reporter           │
+  └─────────────────────────────────────────────────┘
+          |
+          v
+    SARIF + JSON reports  ──&gt;  CI/CD / GRC tooling
+</pre>
+    </div>
+
+    <div class="grid-4" style="margin-top:2rem;">
+      <div class="agent-card">
+        <div class="agent-icon">🧠</div>
+        <h3>Planner</h3>
+        <p>Claude Opus reasoning model formulates and revises attack strategy using live target behavioral signals and episodic memory.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">⚔️</div>
+        <h3>Attacker</h3>
+        <p>Synthesizes novel payloads via embedding-space diversity constraint to avoid coverage collapse and maximize attack surface.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🔬</div>
+        <h3>Evaluator</h3>
+        <p>Three-layer detection: semantic proximity, LLM-as-judge panel with configurable quorum, and behavioral trace analysis.</p>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📊</div>
+        <h3>Reporter</h3>
+        <p>Generates SARIF v2.1 and structured JSON reports with CVSSv4.0 scores mapped to global compliance frameworks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ATTACK SURFACE -->
+<section id="surfaces">
+  <div class="container">
+    <h2>Attack Surface Coverage</h2>
+    <p class="section-sub">ARGUS targets the full spectrum of LLM deployment topologies.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="tag-label">Direct</div>
+        <h3>Completion Endpoints</h3>
+        <ul>
+          <li>Prompt injection (direct)</li>
+          <li>Jailbreak and alignment bypass</li>
+          <li>System-prompt extraction</li>
+          <li>Role confusion attacks</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="tag-label">Pipeline</div>
+        <h3>RAG &amp; Agentic Systems</h3>
+        <ul>
+          <li>Indirect cross-prompt injection via documents</li>
+          <li>MCP server mesh traversal</li>
+          <li>Multi-agent pipeline propagation</li>
+          <li>Tool-use / function-calling interfaces</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="tag-label">Compliance</div>
+        <h3>OWASP LLM Top 10 (2025)</h3>
+        <ul>
+          <li>LLM01 — Prompt Injection</li>
+          <li>LLM06 — Excessive Agency</li>
+          <li>LLM08 — Vector &amp; Embedding Weaknesses</li>
+          <li>All 10 categories with CVSSv4.0 vectors</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- DETECTION -->
+<section id="detection" style="background:var(--surface);">
+  <div class="container">
+    <h2>Three-Layer Detection Stack</h2>
+    <p class="section-sub">High-confidence findings through independent, complementary signal sources.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Semantic Proximity</h4>
+          <p>Cosine distance against a confirmed-attack embedding space. Flags responses that land in known attack-success neighborhoods, independent of surface form.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>LLM-as-Judge Panel</h4>
+          <p>Multi-model verdict with a configurable affirmative quorum and confidence threshold. Cross-model agreement reduces false positives from single-model blind spots.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Behavioral Trace Analysis</h4>
+          <p>Pipeline telemetry anomaly detection — catches exploitation that produces no suspicious output text but alters tool-call patterns, token budgets, or downstream API calls.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- COMPLIANCE -->
+<section id="compliance">
+  <div class="container">
+    <h2>Regulatory Compliance Mapping</h2>
+    <p class="section-sub">Every confirmed finding is automatically tagged to applicable regulatory frameworks.</p>
+    <div class="pill-row">
+      <span class="pill">NIST AI RMF</span>
+      <span class="pill">EU AI Act</span>
+      <span class="pill">US EO 14110</span>
+      <span class="pill">UK AISI</span>
+      <span class="pill">India CERT-In</span>
+      <span class="pill">ISO 42001</span>
+      <span class="pill">APAC Digital Governance</span>
+      <span class="pill">African Digital Frameworks</span>
+    </div>
+    <p style="margin-top:1.5rem;color:var(--muted);font-size:0.88rem;">
+      Reports include regulatory citation, affected article or control, and suggested remediation — ready to hand off to your GRC team or drop into your audit trail.
+    </p>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- SCAN PROFILES -->
+<section id="profiles" style="background:var(--surface);">
+  <div class="container">
+    <h2>Scan Profiles</h2>
+    <p class="section-sub">Pick the right depth for your use case.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Profile</th>
+            <th>Payload Budget</th>
+            <th>Focus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code style="color:var(--accent)">quick</code></td><td>20</td><td>Highest-severity OWASP categories only — ideal for CI gates</td></tr>
+          <tr><td><code style="color:var(--accent)">full</code></td><td>100</td><td>All 10 OWASP LLM Top 10 categories across all attack surfaces</td></tr>
+          <tr><td><code style="color:var(--accent)">pipeline</code></td><td>50</td><td>RAG, MCP, multi-agent, and tool-use surfaces specifically</td></tr>
+          <tr><td><code style="color:var(--accent)">compliance</code></td><td>80</td><td>All categories with full 8-framework compliance mapping output</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- QUICK START -->
+<section id="quickstart">
+  <div class="container">
+    <h2>Quick Start</h2>
+    <p class="section-sub">Install and run your first scan in under two minutes.</p>
+    <div class="code-block">
+<pre><span class="comment"># Install</span>
+<span class="cmd">pip install -e .</span>
+
+<span class="comment"># Quick scan — Anthropic (20 payloads, highest-severity categories)</span>
+<span class="cmd">argus scan --target anthropic --model claude-sonnet-4-6 --profile quick</span>
+
+<span class="comment"># Full scan with custom config and report directory</span>
+<span class="cmd">argus scan --target anthropic --model claude-opus-4-7 --profile full \
+           --config configs/argus.default.yaml --output-dir ./my-reports</span>
+
+<span class="comment"># Scan with a system prompt (e.g., a deployed chatbot persona)</span>
+<span class="cmd">argus scan --target openai --model gpt-4o \
+           --system-prompt "You are a helpful customer service agent." \
+           --profile compliance</span>
+
+<span class="comment"># View a saved report</span>
+<span class="cmd">argus show ./argus-reports/&lt;session-id&gt;.report.json</span></pre>
+    </div>
+    <p style="margin-top:1rem;font-size:0.82rem;color:var(--muted);">
+      API key resolution order: <code>--api-key</code> flag &rarr; <code>ARGUS_API_KEY</code> env var &rarr; <code>ANTHROPIC_API_KEY</code> / <code>OPENAI_API_KEY</code>
+    </p>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<div class="author-section">
+  <div class="author-avatar">S</div>
+  <div class="author-name">Sunil Gentyala</div>
+  <div class="author-title">IEEE Senior Member &nbsp;|&nbsp; Cybersecurity &amp; AI Security &nbsp;|&nbsp; HCLTech, Dallas TX</div>
+  <div class="author-links">
+    <a href="mailto:sunil.gentyala@ieee.org" class="author-link">sunil.gentyala@ieee.org</a>
+    <a href="https://github.com/sunilgentyala" target="_blank" class="author-link">GitHub</a>
+    <a href="https://www.linkedin.com/in/sunil-gentyala" target="_blank" class="author-link">LinkedIn</a>
+    <a href="https://github.com/sunilgentyala/argus" target="_blank" class="author-link">Repository</a>
+  </div>
+</div>
+
+<footer>
+  <p>ARGUS is released under the <a href="https://github.com/sunilgentyala/argus/blob/main/LICENSE" target="_blank">Apache-2.0 License</a>. &copy; 2026 Sunil Gentyala.</p>
+</footer>
+
+</body>
+</html>
