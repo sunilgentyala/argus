@@ -16,6 +16,11 @@
   <meta name="twitter:title" content="ARGUS — Agentic LLM Red-Team Scanner">
   <meta name="twitter:description" content="Autonomous LLM red-teaming. Multi-agent. CVSSv4.0. 8 compliance frameworks. Apache 2.0.">
   <link rel="canonical" href="https://sunilgentyala.github.io/argus/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="color-scheme" content="dark">
   <style>
     :root {
       --bg: #0d1117;
@@ -459,12 +464,102 @@
     /* ── DIVIDER ── */
     .section-divider { border: none; border-top: 1px solid var(--border); }
 
+    /* ── NAV LOGO ── */
+    .nav-logo {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 0.38rem;
+      position: relative;
+      top: -1px;
+      transition: filter 0.2s;
+    }
+    .nav-brand:hover .nav-logo { filter: drop-shadow(0 0 6px rgba(240,136,62,0.6)); }
+
+    /* ── HERO TERMINAL ── */
+    .hero-term {
+      max-width: 660px;
+      margin: 2.5rem auto 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: left;
+      box-shadow:
+        0 16px 56px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(240,136,62,0.07),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .hero-term-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .hterm-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .hterm-cmd {
+      font-family: 'SF Mono','Fira Code','Fira Mono',monospace;
+      font-size: 0.71rem;
+      color: var(--muted);
+      margin-left: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hero-term-body {
+      padding: 0.85rem 1.15rem;
+      font-family: 'SF Mono','Fira Code','Fira Mono',monospace;
+      font-size: 0.79rem;
+      line-height: 1.92;
+    }
+    .htl {
+      opacity: 0;
+      animation: htlIn 0.35s ease forwards;
+      animation-delay: var(--d, 0s);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    @keyframes htlIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .ht-blue  { color: var(--accent2); font-weight: 700; }
+    .ht-ora   { color: var(--accent);  font-weight: 700; }
+    .ht-red   { color: var(--red);     font-weight: 700; }
+    .ht-green { color: var(--green);   font-weight: 700; }
+    .ht-high  { color: var(--accent);  font-weight: 700; }
+    .ht-crit  { color: var(--red);     font-weight: 700; }
+    .hbar {
+      display: inline-block;
+      width: 54px; height: 7px;
+      background: linear-gradient(90deg, var(--accent) 0%, #ff6030 100%);
+      border-radius: 3px;
+      vertical-align: middle;
+      margin: 0 0.3rem;
+    }
+
+    /* ── BADGE glow ── */
+    .badge-orange { box-shadow: 0 0 12px rgba(240,136,62,0.18); }
+
+    /* ── HERO headline gradient ── */
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff6b35 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── STAT NUM subtle glow ── */
+    .stat-num { text-shadow: 0 0 24px rgba(240,136,62,0.25); }
+
     @media (max-width: 640px) {
       .hero h1 { font-size: 2.1rem; }
       .author-card { flex-direction: column; }
       .stats { gap: 2rem; }
       .star-cta { margin: 0 1rem; padding: 2rem 1rem; }
       .nav-links a:not(.nav-github):not(:last-child) { display: none; }
+      .hero-term { display: none; }
     }
   </style>
 </head>
@@ -472,7 +567,16 @@
 
 <!-- NAV -->
 <nav>
-  <span class="nav-brand">ARGUS<sup>beta</sup></span>
+  <span class="nav-brand">
+    <svg class="nav-logo" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="32" height="32" rx="7" fill="#161b22"/>
+      <circle cx="16" cy="16" r="12" stroke="#f0883e" stroke-width="0.8" opacity="0.35"/>
+      <line x1="9.5" y1="25.5" x2="16" y2="7" stroke="#f0883e" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="16" y1="7" x2="22.5" y2="25.5" stroke="#f0883e" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="12" y1="17.5" x2="20" y2="17.5" stroke="#f0883e" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="16" cy="25.5" r="2.2" fill="#58a6ff"/>
+    </svg>ARGUS<sup>beta</sup>
+  </span>
   <div class="nav-links">
     <a href="#surfaces">Surfaces</a>
     <a href="#architecture">How it works</a>
@@ -507,6 +611,26 @@
       <a href="#quickstart" class="btn btn-outline">
         Quick start &darr;
       </a>
+    </div>
+
+    <!-- Live scan terminal -->
+    <div class="hero-term" aria-hidden="true">
+      <div class="hero-term-bar">
+        <span class="hterm-dot" style="background:#f85149"></span>
+        <span class="hterm-dot" style="background:#f0883e"></span>
+        <span class="hterm-dot" style="background:#3fb950"></span>
+        <span class="hterm-cmd">argus scan --target anthropic --model claude-opus-4 --profile full</span>
+      </div>
+      <div class="hero-term-body">
+        <div class="htl" style="--d:.15s"><span class="ht-blue">[profiling]</span> Characterizing target behavioral envelope&#8230; &nbsp;<span class="ht-green">done</span></div>
+        <div class="htl" style="--d:.65s"><span class="ht-blue">[planning] </span> 14 attack tasks queued &middot; LLM01 &rarr; LLM10</div>
+        <div class="htl" style="--d:1.2s"><span class="ht-ora">[attacking]</span> LLM01 &middot; direct_injection &nbsp;&nbsp;&nbsp;&nbsp; <span class="hbar"></span> 50/50</div>
+        <div class="htl" style="--d:1.8s"><span class="ht-ora">[evaluator]</span> Layer&nbsp;1 hit &middot; Layer&nbsp;2 &nbsp;<span class="ht-green">CONFIRMED</span></div>
+        <div class="htl" style="--d:2.3s"><span class="ht-red">[finding]  </span> ARG-F8A2 &middot; <span class="ht-high">CVSS&nbsp;8.7&nbsp;High</span> &middot; EU AI Act Art.9(2)</div>
+        <div class="htl" style="--d:2.9s"><span class="ht-ora">[attacking]</span> LLM08 &middot; mcp_tool_poisoning &nbsp;&nbsp;&nbsp; <span class="hbar"></span> 50/50</div>
+        <div class="htl" style="--d:3.5s"><span class="ht-red">[finding]  </span> ARG-C1E9 &middot; <span class="ht-crit">CVSS&nbsp;9.4&nbsp;Critical</span> &middot; MCP propagation</div>
+        <div class="htl" style="--d:4.05s"><span class="ht-green">[done]     </span> 2 findings &middot; argus-session.sarif &nbsp;<span class="ht-green">&#10003;</span></div>
+      </div>
     </div>
   </div>
 </div>
