@@ -2,7 +2,7 @@
 # Override per-scan via --config or profile flags.
 
 argus:
-  version: "1.0.0-beta"
+  version: "1.1.0"
 
 scan:
   profile: full                  # quick | full | pipeline | compliance
