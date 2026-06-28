@@ -195,6 +195,61 @@ _MAPPING: dict[str, dict[str, list[ComplianceTag]]] = {
     },
 }
 
+# ── NIST SP 800-228 API protection overlays ───────────────────────────────────
+# NIST SP 800-228 (Jun. 2025) — Guidelines for API Protection for Cloud-Native
+# Systems — provides controls directly applicable to LLM API surfaces.
+
+_SP800228_MAPPING: dict[str, list[ComplianceTag]] = {
+    "LLM01": [
+        ComplianceTag("NIST SP 800-228", "§4.3 Input Validation Controls", "technical",
+            "mandatory",
+            "API input validation must reject or sanitize adversarial prompt injection patterns"),
+        ComplianceTag("NIST SP 800-228", "§5.1 API Gateway Policy Enforcement", "technical",
+            "recommended",
+            "Gateway-level policy enforcement required to intercept injection vectors pre-model"),
+    ],
+    "LLM02": [
+        ComplianceTag("NIST SP 800-228", "§4.5 Output Sanitization", "technical", "mandatory",
+            "API responses containing LLM-generated content must be sanitized before delivery"),
+    ],
+    "LLM04": [
+        ComplianceTag("NIST SP 800-228", "§6.2 Rate Limiting and Throttling", "technical",
+            "mandatory",
+            "API rate limiting is a primary control against LLM DoS and cost-harvesting attacks"),
+    ],
+    "LLM05": [
+        ComplianceTag("NIST SP 800-228", "§7.1 Third-Party API Trust Chains", "technical",
+            "mandatory",
+            "Third-party LLM plugin and tool API trust chains must be audited and constrained"),
+    ],
+    "LLM06": [
+        ComplianceTag("NIST SP 800-228", "§4.4 Sensitive Data Exposure Controls", "technical",
+            "mandatory",
+            "API responses must not expose system prompts, credentials, or internal config data"),
+    ],
+    "LLM07": [
+        ComplianceTag("NIST SP 800-228", "§5.3 Function-Level Authorization", "technical",
+            "mandatory",
+            "LLM plugin API endpoints require function-level authorization and scope enforcement"),
+    ],
+    "LLM08": [
+        ComplianceTag("NIST SP 800-228", "§6.1 Least-Privilege API Design", "technical",
+            "mandatory",
+            "Agentic API surfaces must enforce least-privilege to prevent excessive agency actions"),
+    ],
+}
+
+
+def _apply_sp800228_overlays(mapping: dict) -> dict:
+    """Merge NIST SP 800-228 entries into the main mapping table."""
+    for category, tags in _SP800228_MAPPING.items():
+        if category in mapping:
+            mapping[category]["NIST_SP_800_228"] = tags
+    return mapping
+
+
+_MAPPING = _apply_sp800228_overlays(_MAPPING)
+
 
 class ComplianceMapper:
     """Maps confirmed findings to regulatory framework obligations."""

@@ -146,7 +146,14 @@ def scan(
     )
     profiler = TargetProfiler()
 
-    attacker = AttackerAgent(synthesizer=synthesizer, profiler=profiler, target=target_obj)
+    mutation_budget = cfg.get("attack", {}).get("mutation_budget", 3)
+    attacker = AttackerAgent(
+        synthesizer=synthesizer,
+        profiler=profiler,
+        target=target_obj,
+        mutation_budget=mutation_budget,
+        enable_mutations=mutation_budget > 0,
+    )
     evaluator = EvaluatorAgent(judge=judge, scorer=scorer, mapper=mapper)
     reporter = ReporterAgent(output_dir=output_dir, sarif_path=sarif)
 

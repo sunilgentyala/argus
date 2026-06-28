@@ -25,6 +25,24 @@ class ScanPhase(str, Enum):
     FAILED     = "failed"
 
 
+# MITRE ATLAS technique IDs for each OWASP LLM Top 10 (2025) category
+_ATLAS_TECHNIQUE: dict[str, str] = {
+    "LLM01": "AML.T0051.002",  # Indirect Prompt Injection / LLM Prompt Injection
+    "LLM02": "AML.T0054",      # Prompt Injection — output handling variant
+    "LLM03": "AML.T0020",      # Poison Training Data
+    "LLM04": "AML.T0034",      # Cost Harvesting (resource exhaustion)
+    "LLM05": "AML.T0010",      # ML Supply Chain Compromise
+    "LLM06": "AML.T0035",      # ML Artifact Collection / Information Disclosure
+    "LLM07": "AML.T0040",      # ML-Enabled Product Abuse (plugin design)
+    "LLM08": "AML.T0043",      # Craft Adversarial Data (excessive agency)
+    "LLM09": "AML.T0048",      # Societal Harm (overreliance / hallucination)
+    "LLM10": "AML.T0044",      # Full ML Model Access (functional extraction)
+}
+
+_ARGUS_VERSION = "1.1.0"
+_OWASP_LLM_VERSION = "2025"
+
+
 @dataclass
 class Finding:
     finding_id: str
@@ -39,9 +57,17 @@ class Finding:
     cvss_severity: str = "Unknown"
     confirmed: bool = False
     compliance_tags: list[str] = field(default_factory=list)
+    mitre_atlas_technique: str = ""
+    argus_version: str = _ARGUS_VERSION
+    owasp_version: str = _OWASP_LLM_VERSION
+    mutation_applied: str = "none"
     timestamp: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
+
+    def __post_init__(self) -> None:
+        if not self.mitre_atlas_technique:
+            self.mitre_atlas_technique = _ATLAS_TECHNIQUE.get(self.owasp_category, "")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -55,6 +81,10 @@ class Finding:
             "cvss_severity": self.cvss_severity,
             "confirmed": self.confirmed,
             "compliance_tags": self.compliance_tags,
+            "mitre_atlas_technique": self.mitre_atlas_technique,
+            "argus_version": self.argus_version,
+            "owasp_version": self.owasp_version,
+            "mutation_applied": self.mutation_applied,
             "timestamp": self.timestamp,
         }
 

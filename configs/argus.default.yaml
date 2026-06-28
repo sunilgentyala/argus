@@ -35,9 +35,13 @@ scoring:
   engine: cvss4
   include_environmental: true
 
+attack:
+  mutation_budget: 3             # max mutation variants per base payload (0 = disable)
+
 compliance:
   frameworks:
     - NIST_AI_RMF
+    - NIST_SP_800_228
     - EU_AI_ACT
     - UK_AISI
     - US_EO_14110
