@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "argus-scanner"
-version = "1.0.0-beta"
+version = "1.1.0"
 description = "Agentic Red-team and Governance Unified Scanner for LLM security"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -14,6 +14,8 @@ authors = [
 keywords = [
     "llm-security", "red-team", "prompt-injection", "owasp",
     "agentic-ai", "vulnerability-scanner", "cvss", "ai-safety",
+    "ai-red-team", "llm-testing", "ai-governance", "sarif",
+    "cvssv4", "compliance", "mcp-security", "rag-security",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -48,9 +50,11 @@ dev      = [
 ]
 
 [project.urls]
-Homepage   = "https://github.com/sunilgentyala/argus"
-Repository = "https://github.com/sunilgentyala/argus"
-Issues     = "https://github.com/sunilgentyala/argus/issues"
+Homepage      = "https://sunilgentyala.github.io/argus/"
+Repository    = "https://github.com/sunilgentyala/argus"
+Issues        = "https://github.com/sunilgentyala/argus/issues"
+Documentation = "https://sunilgentyala.github.io/argus/"
+Changelog     = "https://github.com/sunilgentyala/argus/releases"
 
 [project.scripts]
 argus = "argus.cli:main"

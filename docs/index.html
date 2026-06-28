@@ -583,6 +583,10 @@
     <a href="#compare">Compare</a>
     <a href="#results">Results</a>
     <a href="#quickstart">Quick start</a>
+    <a href="https://www.linkedin.com/in/sunilgentyala/" class="nav-github" target="_blank" style="color:#58a6ff;border-color:rgba(0,119,181,0.35);">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
     <a href="https://github.com/sunilgentyala/argus" class="nav-github" target="_blank">
       &#9733; GitHub
     </a>
@@ -593,7 +597,7 @@
 <div class="hero-wrap">
   <div class="hero">
     <div class="badge-row">
-      <span class="badge badge-orange">v1.0.0-beta</span>
+      <span class="badge badge-orange">v1.1.0</span>
       <span class="badge badge-green">Open Source</span>
       <span class="badge badge-blue">Python 3.11+</span>
       <span class="badge badge-purple">Apache 2.0</span>
@@ -608,6 +612,10 @@
       <a href="https://github.com/sunilgentyala/argus" class="btn btn-primary" target="_blank">
         &#9733;&nbsp; Star on GitHub
       </a>
+      <a href="https://www.linkedin.com/in/sunilgentyala/" class="btn btn-outline" target="_blank" style="border-color:rgba(0,119,181,0.4);color:#58a6ff;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        &nbsp;Follow on LinkedIn
+      </a>
       <a href="#quickstart" class="btn btn-outline">
         Quick start &darr;
       </a>
@@ -619,7 +627,7 @@
         <span class="hterm-dot" style="background:#f85149"></span>
         <span class="hterm-dot" style="background:#f0883e"></span>
         <span class="hterm-dot" style="background:#3fb950"></span>
-        <span class="hterm-cmd">argus scan --target anthropic --model claude-opus-4 --profile full</span>
+        <span class="hterm-cmd">argus scan --target anthropic --model claude-opus-4-8 --profile full --sarif argus.sarif</span>
       </div>
       <div class="hero-term-body">
         <div class="htl" style="--d:.15s"><span class="ht-blue">[profiling]</span> Characterizing target behavioral envelope&#8230; &nbsp;<span class="ht-green">done</span></div>
@@ -1258,19 +1266,58 @@ pip install -e .</pre>
   </a>
 </section>
 
+<!-- WHAT'S NEW v1.1.0 -->
+<section>
+  <div class="section-label">Changelog</div>
+  <h2>What's new in v1.1.0</h2>
+  <p class="section-sub">Latest release ships HTML reports, direct SARIF output, and threat intelligence.</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));">
+    <div class="card">
+      <div class="card-icon">&#128196;</div>
+      <h3>HTML Reports</h3>
+      <p>Self-contained HTML output with severity-colour-coded findings table. Attach to GRC tickets or email to security stakeholders — no external assets required.</p>
+      <div class="card-skills"><span class="skill-chip">html_reporter.py</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127937;</div>
+      <h3>Direct SARIF flag</h3>
+      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">--sarif argus.sarif</code> flag lets you specify the SARIF output path directly — perfect for CI pipelines that pick up a specific filename.</p>
+      <div class="card-skills"><span class="skill-chip">--sarif</span><span class="skill-chip">CI/CD</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#129302;</div>
+      <h3>Threat Intelligence</h3>
+      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">argus/intelligence/</code> module ships a curated LLM attack signal database — helping the Planner bias toward highest-yield vectors per model family.</p>
+      <div class="card-skills"><span class="skill-chip">ThreatIntelligence</span><span class="skill-chip">model-profiles</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128640;</div>
+      <h3>Claude Opus 4.8</h3>
+      <p>Planner now defaults to <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">claude-opus-4-8</code> — Anthropic's latest reasoning model. Attack strategy quality improves measurably on complex agentic surfaces.</p>
+      <div class="card-skills"><span class="skill-chip">claude-opus-4-8</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
 <!-- STAR CTA -->
 <div class="star-cta">
   <h2>Help grow the project &#11088;</h2>
-  <p>A star on GitHub helps other security researchers find ARGUS and signals that open LLM security tooling matters.</p>
+  <p>A star on GitHub helps security researchers find ARGUS and signals that open LLM security tooling matters.</p>
   <div class="star-cta-actions">
     <a href="https://github.com/sunilgentyala/argus" class="btn btn-primary" target="_blank">
       &#9733;&nbsp; Star on GitHub
     </a>
+    <a href="https://www.linkedin.com/in/sunilgentyala/" class="btn btn-outline" target="_blank" style="border-color:rgba(0,119,181,0.4);color:#58a6ff;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      &nbsp;Follow on LinkedIn
+    </a>
+    <a href="https://github.com/sunilgentyala/argus/blob/main/CONTRIBUTING.md" class="btn btn-outline" target="_blank">
+      Contribute
+    </a>
     <a href="https://github.com/sunilgentyala/argus/issues" class="btn btn-outline" target="_blank">
       Open an issue
-    </a>
-    <a href="https://github.com/sunilgentyala/argus/blob/main/README.md" class="btn btn-outline" target="_blank">
-      Read the docs
     </a>
   </div>
 </div>
@@ -1288,6 +1335,7 @@ pip install -e .</pre>
         HCLTech, Dallas TX &nbsp;&middot;&nbsp; sunil.gentyala@ieee.org
       </div>
       <div class="author-links">
+        <a href="https://www.linkedin.com/in/sunilgentyala/" class="author-link" target="_blank" style="color:#0077b5;border-color:rgba(0,119,181,0.35);">LinkedIn</a>
         <a href="https://github.com/sunilgentyala" class="author-link" target="_blank">GitHub</a>
         <a href="https://sunilgentyala.github.io/OmniRed/" class="author-link" target="_blank">OmniRed</a>
         <a href="https://github.com/sunilgentyala/ZKP-RA" class="author-link" target="_blank">ZKP-RA</a>
@@ -1300,11 +1348,15 @@ pip install -e .</pre>
 <!-- FOOTER -->
 <footer>
   <p>
-    ARGUS &copy; 2026 <a href="https://github.com/sunilgentyala" target="_blank">Sunil Gentyala</a>,
+    ARGUS v1.1.0 &copy; 2026 <a href="https://github.com/sunilgentyala" target="_blank">Sunil Gentyala</a>,
     HCLTech &nbsp;&middot;&nbsp;
     <a href="https://github.com/sunilgentyala/argus/blob/main/LICENSE" target="_blank">Apache 2.0</a>
     &nbsp;&middot;&nbsp;
-    <a href="https://github.com/sunilgentyala/argus" target="_blank">GitHub Repository</a>
+    <a href="https://github.com/sunilgentyala/argus" target="_blank">GitHub</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.linkedin.com/in/sunilgentyala/" target="_blank" style="color:#58a6ff;">LinkedIn</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/sunilgentyala/argus/blob/main/CONTRIBUTING.md" target="_blank">Contribute</a>
   </p>
   <p style="margin-top:0.4rem">Paper under review &mdash; IEEE &nbsp;&middot;&nbsp; <a href="https://sunilgentyala.github.io/argus/">sunilgentyala.github.io/argus</a> &nbsp;&middot;&nbsp; For authorized security testing only.</p>
 </footer>

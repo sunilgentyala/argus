@@ -72,7 +72,7 @@ def _build_target(target: str, model: str | None, system_prompt: str, api_key: s
 
 
 @click.group()
-@click.version_option(version="1.0.0-beta", prog_name="argus")
+@click.version_option(version="1.1.0", prog_name="argus")
 def main() -> None:
     """ARGUS — Agentic Red-team and Governance Unified Scanner for LLM security."""
 
@@ -94,6 +94,8 @@ def main() -> None:
               help="Path to YAML config (default: configs/argus.default.yaml)")
 @click.option("--output-dir", "-o", default="./argus-reports",
               help="Output directory for reports")
+@click.option("--sarif", default=None,
+              help="Direct path for SARIF output file (e.g. --sarif argus.sarif)")
 @click.option("--api-key", default=None, envvar="ARGUS_API_KEY",
               help="API key for target (or set ARGUS_API_KEY env var)")
 @click.option("--verbose", "-v", is_flag=True, default=False)
@@ -105,6 +107,7 @@ def scan(
     budget: Optional[int],
     config: Optional[str],
     output_dir: str,
+    sarif: Optional[str],
     api_key: Optional[str],
     verbose: bool,
 ) -> None:
@@ -121,7 +124,7 @@ def scan(
 
     agents_cfg = cfg.get("agents", {})
     planner = PlannerAgent(
-        model=agents_cfg.get("planner", {}).get("model", "claude-opus-4-7-20251101"),
+        model=agents_cfg.get("planner", {}).get("model", "claude-opus-4-8"),
         max_tokens=agents_cfg.get("planner", {}).get("max_tokens", 2048),
     )
     synthesizer = PayloadSynthesizer(
@@ -145,7 +148,7 @@ def scan(
 
     attacker = AttackerAgent(synthesizer=synthesizer, profiler=profiler, target=target_obj)
     evaluator = EvaluatorAgent(judge=judge, scorer=scorer, mapper=mapper)
-    reporter = ReporterAgent(output_dir=output_dir)
+    reporter = ReporterAgent(output_dir=output_dir, sarif_path=sarif)
 
     orchestrator = Orchestrator(
         planner=planner,

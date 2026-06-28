@@ -13,7 +13,7 @@ scan:
 
 agents:
   planner:
-    model: claude-opus-4-7-20251101
+    model: claude-opus-4-8
     max_tokens: 2048
     temperature: 1.0
   synthesizer:

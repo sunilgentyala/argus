@@ -159,7 +159,7 @@ class PlannerAgent(Agent):
 
     def __init__(
         self,
-        model: str = "claude-opus-4-7-20251101",
+        model: str = "claude-opus-4-8",
         max_tokens: int = 2048,
         temperature: float = 1.0,
         api_key: str | None = None,
