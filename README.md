@@ -286,7 +286,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 ## Author
 
 **Sunil Gentyala** — IEEE Senior Member
-Cybersecurity and AI Security, HCLTech, Dallas, TX, USA
+Lead Cybersecurity and AI Security COnsultant, HCLTech, Dallas, TX, USA
 sunil.gentyala@ieee.org
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://www.linkedin.com/in/sunilgentyala/)
