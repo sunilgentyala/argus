@@ -764,7 +764,7 @@
     </div>
     <div class="why-item">
       <h4>Cross-session memory</h4>
-      <p>ChromaDB-backed episodic memory means each scan starts with everything learned from every previous scan — progressively sharper over time.</p>
+      <p>ChromaDB-backed episodic memory means each scan starts with everything learned from every previous scan — progressively sharper over time. Validated: a 4,000-synthetic-family ablation against the real ranking mechanism shows a 40.6% reduction in mean categories probed before finding the vulnerable one (5.56 cold-start vs. 3.30 memory-seeded); the benefit is concentrated in higher-accuracy regimes, with no advantage in the lowest-accuracy decile, as expected for an uninformative memory.</p>
     </div>
     <div class="why-item">
       <h4>Three-layer validation</h4>
@@ -1030,49 +1030,49 @@
   <!-- Payload Diversity -->
   <div class="section-label" style="margin-bottom:0.75rem;">Payload diversity &mdash; embedding-space constraint proof</div>
   <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.65;">
-    20-candidate pools generated for 3 OWASP categories &times; 2 open-weight local targets (qwen2.5:7b, llama3 via Ollama), embedded with a real dense model (nomic-embed-text). At the shipped default threshold &delta;&nbsp;=&nbsp;0.35, constrained synthesis reduces mean intra-batch cosine similarity by 24% versus unconstrained generation (0.57 vs. 0.75) &mdash; yield and similarity decline smoothly across &delta; with no sharp optimum, so 0.35 is a moderate-yield/moderate-diversity default, not a calibrated best point. Full &delta; sweep and methodology in the paper, Section VII.C.
+    20-candidate pools generated for 3 OWASP categories &times; 2 open-weight local targets (qwen2.5:7b, llama3 via Ollama), embedded with a real dense model (nomic-embed-text). At the shipped default threshold &delta;&nbsp;=&nbsp;0.35, constrained synthesis reduces mean intra-batch cosine similarity by 14.5% versus unconstrained generation (0.53 vs. 0.62), averaged across all six configurations &mdash; yield and similarity decline smoothly across &delta; with no sharp optimum, so 0.35 is a moderate-yield/moderate-diversity default, not a calibrated best point. Only one configuration (LLM01, qwen2.5:7b) retained enough admitted candidates across the full &delta; sweep to trace a real curve; llama3 produced highly repetitive completions on the other five configurations (unconstrained similarity 0.83&ndash;0.95), collapsing them to 1&ndash;2 admitted candidates by &delta;=0.25&ndash;0.30 &mdash; a genuine model-dependent limitation, reported as such rather than smoothed into the aggregate. Full &delta; sweep and methodology in the paper, Section VII.C.
   </p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:1.25rem;">
     <div style="background:var(--surface);border:1px solid rgba(63,185,80,0.3);border-radius:10px;padding:1.5rem;">
       <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;">ARGUS constrained (&delta; = 0.35)</div>
-      <div style="font-size:3rem;font-weight:800;color:var(--green);letter-spacing:-0.04em;line-height:1;">0.57</div>
+      <div style="font-size:3rem;font-weight:800;color:var(--green);letter-spacing:-0.04em;line-height:1;">0.53</div>
       <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean admitted-set cosine similarity</div>
       <div style="margin-top:1rem;background:var(--bg);border-radius:4px;height:8px;overflow:hidden;">
-        <div style="width:57%;height:100%;background:var(--green);border-radius:4px;"></div>
+        <div style="width:53%;height:100%;background:var(--green);border-radius:4px;"></div>
       </div>
     </div>
     <div style="background:var(--surface);border:1px solid rgba(248,81,73,0.3);border-radius:10px;padding:1.5rem;">
       <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;">Unconstrained synthesis</div>
-      <div style="font-size:3rem;font-weight:800;color:var(--red);letter-spacing:-0.04em;line-height:1;">0.75</div>
+      <div style="font-size:3rem;font-weight:800;color:var(--red);letter-spacing:-0.04em;line-height:1;">0.62</div>
       <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean pool cosine similarity</div>
       <div style="margin-top:1rem;background:var(--bg);border-radius:4px;height:8px;overflow:hidden;">
-        <div style="width:75%;height:100%;background:var(--red);border-radius:4px;"></div>
+        <div style="width:62%;height:100%;background:var(--red);border-radius:4px;"></div>
       </div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;margin-bottom:2rem;">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">19.2%</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean admission yield at &delta;=0.35</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">18.3%</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean admission yield at &delta;=0.35 (6 configs)</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
       <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">5%</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, LLM06 extraction (tightest scope)</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, both LLM06 configs &amp; LLM01/llama3</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">70%</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, LLM01 injection (broadest scope)</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">75%</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, LLM01/qwen2.5:7b only</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">0.95 vs 0.60</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">distinct-bigram ratio, admitted vs. unconstrained</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">0.95 vs 0.86</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">distinct-bigram ratio, admitted vs. unconstrained (2 of 6 configs eligible)</div>
     </div>
   </div>
 
   <!-- OWASP Coverage -->
   <div class="section-label" style="margin-bottom:0.75rem;">OWASP LLM Top 10 (2025) &mdash; architectural coverage comparison</div>
   <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
-    "Full" below means a dedicated payload module, scoring path, and compliance mapping exist per category (verified by source inspection against garak v0.15.x main branch) &mdash; it is an architectural comparison, not a measured detection rate. A live-target empirical pilot with per-category precision/recall/F1 has not yet been run; this table should not be read as measured detection performance.
+    "Full" below means a dedicated payload module, scoring path, and compliance mapping exist per category (verified by source inspection against garak v0.15.x main branch) &mdash; it is an architectural comparison, not a measured detection rate for the other eight categories. A live-target empirical pilot with real per-category precision/recall/F1 has now been run for LLM01 and LLM06 (see below); the remaining eight categories are architectural coverage only.
   </p>
   <div class="table-wrap" style="margin-bottom:1.25rem;">
     <table>
@@ -1109,6 +1109,34 @@
       <div style="font-size:0.78rem;color:var(--muted);margin-top:0.25rem;">garak effective coverage (2 full, 5 partial, 3 none)</div>
     </div>
   </div>
+
+  <!-- Live-Target Detection Pilot -->
+  <div class="section-label" style="margin-bottom:0.75rem;">Live-target detection pilot &mdash; real precision/recall/F1</div>
+  <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.65;">
+    100 real (prompt, response) pairs across qwen2.5:7b and llama3 (via Ollama) for LLM01 (prompt injection) and LLM06 (secret disclosure), scored by a faithful reimplementation of garak's StringDetector (verified against garak v0.13.3 source), the real SemanticProximityDetector, a local cross-model LLM-judge, and the actual shipped EvaluatorAgent pipeline. Ground truth: a disclosed deterministic rule (canary/secret present with no refusal marker), not manual labeling &mdash; 22 ground-truth leaks, 78 negatives.
+  </p>
+  <div class="table-wrap" style="margin-bottom:1.25rem;">
+    <table>
+      <thead>
+        <tr>
+          <th>Detector</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1</th>
+          <th>FPR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>garak-style substring match</td><td>0.59</td><td>1.00</td><td>0.75</td><td>0.19</td></tr>
+        <tr><td>Semantic detector alone</td><td>0.48</td><td>0.68</td><td>0.57</td><td>0.21</td></tr>
+        <tr class="highlight-row"><td>LLM-judge alone</td><td>0.80</td><td>0.55</td><td>0.65</td><td>0.04</td></tr>
+        <tr><td>Shipped pipeline (Layer 1 gates Layer 2)</td><td>0.80</td><td>0.36</td><td>0.50</td><td>0.03</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.8rem;color:var(--muted);margin-bottom:2rem;line-height:1.6;">
+    The garak-style detector's false positives come entirely from refusals that quote the trigger string while declining it &mdash; a concretely observed instance of keyword-matching's failure mode. The judge alone is the strongest single detector; gating it behind the semantic layer (the actual shipped design) <em>reduces</em> F1 below the judge running alone, a genuine calibration finding rather than a smoothed-over one. Scope: 2 of 10 categories, 2 models, single-rule-labeled, 100 pairs &mdash; a first real measurement, not the full controlled benchmark. Methodology and raw data: <code style="font-family:'SF Mono','Fira Code',monospace;font-size:0.8rem;">benchmarks/live_target_pilot.py</code> in the repo.
+  </p>
 
   <!-- CI/CD Integration Proof -->
   <div class="section-label" style="margin-bottom:0.75rem;">CI/CD integration &mdash; SARIF v2.1 proof</div>
