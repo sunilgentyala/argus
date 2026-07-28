@@ -65,8 +65,14 @@ def _build_target(target: str, model: str | None, system_prompt: str, api_key: s
             api_key=api_key,
             system_prompt=system_prompt,
         )
+    if target == "ollama":
+        from argus.targets.ollama_target import OllamaTarget
+        return OllamaTarget(
+            model=model or "llama3",
+            system_prompt=system_prompt,
+        )
     raise click.ClickException(
-        f"Unknown target '{target}'. Supported: anthropic, openai. "
+        f"Unknown target '{target}'. Supported: anthropic, openai, ollama. "
         "For custom endpoints implement argus.targets.base.Target."
     )
 
@@ -79,7 +85,7 @@ def main() -> None:
 
 @main.command()
 @click.option("--target", "-t", required=True,
-              help="Target type: anthropic | openai")
+              help="Target type: anthropic | openai | ollama")
 @click.option("--model", "-m", default=None,
               help="Model name (overrides config default)")
 @click.option("--system-prompt", default="",

@@ -974,7 +974,7 @@
   <!-- CVSSv4.0 Validation -->
   <div class="section-label" style="margin-bottom:0.75rem;">CVSSv4.0 scoring engine — 48-vector validation</div>
   <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.65;">
-    48 hand-crafted test vectors validated against the FIRST CVSSv4.0 reference calculator. All vectors scored within &plusmn;0.2 of the reference. Five representative cases:
+    The scoring engine implements the official FIRST MacroVector/lookup-table/interpolation algorithm (ported from FIRSTdotorg/cvss-v4-calculator), not an approximation. 48 hand-crafted test vectors validated against that reference implementation: 48/48 exact matches, 0.0 mean deviation. Five representative cases:
   </p>
   <div class="table-wrap" style="margin-bottom:2rem;">
     <table>
@@ -991,30 +991,30 @@
         <tr>
           <td>Direct prompt injection &mdash; system-prompt extraction</td>
           <td style="font-family:'SF Mono','Fira Code',monospace;font-size:0.7rem;color:var(--muted);">AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:N/SA:N</td>
-          <td><span style="color:var(--accent);font-weight:700;">8.7</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">High</span></td>
-          <td>8.7</td>
+          <td><span style="color:var(--red);font-weight:700;">9.2</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Critical</span></td>
+          <td>9.2</td>
           <td class="check">0.0</td>
         </tr>
         <tr class="highlight-row">
           <td>Cross-agent privilege escalation via MCP poisoning</td>
           <td style="font-family:'SF Mono','Fira Code',monospace;font-size:0.7rem;color:var(--muted);">AV:N/AC:H/AT:P/PR:L/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H</td>
-          <td><span style="color:var(--red);font-weight:700;">9.4</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Critical</span></td>
-          <td>9.4</td>
+          <td><span style="color:var(--red);font-weight:700;">9.0</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Critical</span></td>
+          <td>9.0</td>
           <td class="check">0.0</td>
         </tr>
         <tr>
           <td>RAG indirect injection, low downstream impact</td>
           <td style="font-family:'SF Mono','Fira Code',monospace;font-size:0.7rem;color:var(--muted);">AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N</td>
-          <td><span style="color:var(--accent2);font-weight:700;">4.2</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Medium</span></td>
-          <td>4.1</td>
-          <td class="check">+0.1</td>
+          <td><span style="color:var(--accent2);font-weight:700;">6.3</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Medium</span></td>
+          <td>6.3</td>
+          <td class="check">0.0</td>
         </tr>
         <tr>
           <td>Tool-call schema confusion, no downstream reach</td>
           <td style="font-family:'SF Mono','Fira Code',monospace;font-size:0.7rem;color:var(--muted);">AV:N/AC:L/AT:N/PR:L/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N</td>
           <td><span style="color:var(--accent2);font-weight:700;">5.3</span>&nbsp;<span style="color:var(--muted);font-size:0.75rem;">Medium</span></td>
-          <td>5.2</td>
-          <td class="check">+0.1</td>
+          <td>5.3</td>
+          <td class="check">0.0</td>
         </tr>
         <tr>
           <td>Zero-impact probe (all Vulnerable &amp; Subsequent metrics: None)</td>
@@ -1030,54 +1030,57 @@
   <!-- Payload Diversity -->
   <div class="section-label" style="margin-bottom:0.75rem;">Payload diversity &mdash; embedding-space constraint proof</div>
   <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.65;">
-    50-payload batches generated for 3 OWASP categories &times; 2 target profiles (threshold &delta;&nbsp;=&nbsp;0.35). Constrained synthesis reduces mean intra-batch cosine similarity by 66% versus unconstrained generation.
+    20-candidate pools generated for 3 OWASP categories &times; 2 open-weight local targets (qwen2.5:7b, llama3 via Ollama), embedded with a real dense model (nomic-embed-text). At the shipped default threshold &delta;&nbsp;=&nbsp;0.35, constrained synthesis reduces mean intra-batch cosine similarity by 24% versus unconstrained generation (0.57 vs. 0.75) &mdash; yield and similarity decline smoothly across &delta; with no sharp optimum, so 0.35 is a moderate-yield/moderate-diversity default, not a calibrated best point. Full &delta; sweep and methodology in the paper, Section VII.C.
   </p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:1.25rem;">
     <div style="background:var(--surface);border:1px solid rgba(63,185,80,0.3);border-radius:10px;padding:1.5rem;">
       <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;">ARGUS constrained (&delta; = 0.35)</div>
-      <div style="font-size:3rem;font-weight:800;color:var(--green);letter-spacing:-0.04em;line-height:1;">0.21</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean cosine similarity &nbsp;(SD 0.04)</div>
+      <div style="font-size:3rem;font-weight:800;color:var(--green);letter-spacing:-0.04em;line-height:1;">0.57</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean admitted-set cosine similarity</div>
       <div style="margin-top:1rem;background:var(--bg);border-radius:4px;height:8px;overflow:hidden;">
-        <div style="width:21%;height:100%;background:var(--green);border-radius:4px;"></div>
+        <div style="width:57%;height:100%;background:var(--green);border-radius:4px;"></div>
       </div>
     </div>
     <div style="background:var(--surface);border:1px solid rgba(248,81,73,0.3);border-radius:10px;padding:1.5rem;">
       <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;">Unconstrained synthesis</div>
-      <div style="font-size:3rem;font-weight:800;color:var(--red);letter-spacing:-0.04em;line-height:1;">0.61</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean cosine similarity &nbsp;(SD 0.09)</div>
+      <div style="font-size:3rem;font-weight:800;color:var(--red);letter-spacing:-0.04em;line-height:1;">0.75</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean pool cosine similarity</div>
       <div style="margin-top:1rem;background:var(--bg);border-radius:4px;height:8px;overflow:hidden;">
-        <div style="width:61%;height:100%;background:var(--red);border-radius:4px;"></div>
+        <div style="width:75%;height:100%;background:var(--red);border-radius:4px;"></div>
       </div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;margin-bottom:2rem;">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">31%</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">avg candidate rejection rate per batch</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">19.2%</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">mean admission yield at &delta;=0.35</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">2.4&times;</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">rejections per admission (LLM06 extraction)</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">5%</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, LLM06 extraction (tightest scope)</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">1.3&times;</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">rejections per admission (LLM01 injection)</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">70%</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">yield, LLM01 injection (broadest scope)</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;">
-      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">6</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">batch configs (3 categories &times; 2 profiles)</div>
+      <div style="font-size:1.6rem;font-weight:800;color:var(--accent);">0.95 vs 0.60</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">distinct-bigram ratio, admitted vs. unconstrained</div>
     </div>
   </div>
 
   <!-- OWASP Coverage -->
-  <div class="section-label" style="margin-bottom:0.75rem;">OWASP LLM Top 10 (2025) &mdash; full coverage proof</div>
+  <div class="section-label" style="margin-bottom:0.75rem;">OWASP LLM Top 10 (2025) &mdash; architectural coverage comparison</div>
+  <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
+    "Full" below means a dedicated payload module, scoring path, and compliance mapping exist per category (verified by source inspection against garak v0.15.x main branch) &mdash; it is an architectural comparison, not a measured detection rate. A live-target empirical pilot (2 of 10 categories, real precision/recall/F1) is reported in the paper, Section VII.E.
+  </p>
   <div class="table-wrap" style="margin-bottom:1.25rem;">
     <table>
       <thead>
         <tr>
           <th>ID</th>
           <th>Category</th>
-          <th>garak v0.13</th>
+          <th>garak v0.15</th>
           <th>ARGUS v1.0</th>
           <th>Coverage gain</th>
         </tr>
@@ -1205,7 +1208,7 @@ pip install -e .</pre>
 <!-- COMPLIANCE -->
 <section>
   <div class="section-label">Regulatory coverage</div>
-  <h2>8 compliance frameworks</h2>
+  <h2>7 compliance frameworks</h2>
   <p class="section-sub">Every confirmed finding is automatically tagged to applicable regulatory articles — ready for your audit trail or GRC team.</p>
 
   <div class="compliance-grid">
@@ -1240,14 +1243,9 @@ pip install -e .</pre>
       <p>International AI management system standard controls.</p>
     </div>
     <div class="compliance-card">
-      <div class="compliance-flag">&#127759;</div>
-      <h3>APAC Digital Governance</h3>
-      <p>Regional frameworks across Asia-Pacific jurisdictions.</p>
-    </div>
-    <div class="compliance-card">
-      <div class="compliance-flag">&#127758;</div>
-      <h3>African Digital Frameworks</h3>
-      <p>AU digital transformation and AI policy alignment.</p>
+      <div class="compliance-flag">&#127482;&#127480;</div>
+      <h3>NIST SP 800-228</h3>
+      <p>API protection controls for cloud-native LLM deployments.</p>
     </div>
   </div>
 </section>

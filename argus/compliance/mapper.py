@@ -1,9 +1,10 @@
 """
 Global Compliance Mapper — maps ARGUS findings to regulatory framework obligations.
 
-Covers: NIST AI RMF, EU AI Act, US EO 14110, UK AISI, India CERT-In,
-ISO/IEC 42001, APAC (SG PDPA, AU AI Ethics), EMEA (GDPR, DORA, NIS2),
-Africa (AU Data Policy, ECOWAS).
+Covers: NIST AI RMF, NIST SP 800-228, EU AI Act, US EO 14110, UK AISI,
+India CERT-In, ISO/IEC 42001 (7 frameworks). APAC, EMEA-beyond-the-EU-AI-Act,
+and Africa-specific instruments are not yet mapped; add entries to _MAPPING
+to extend coverage.
 """
 
 from __future__ import annotations

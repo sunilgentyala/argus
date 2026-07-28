@@ -75,7 +75,7 @@ Target LLM / Pipeline
 ### Scoring and Compliance
 
 - CVSSv4.0 vectors for all 10 OWASP LLM Top 10 (2025) categories
-- Compliance mapping: NIST AI RMF, EU AI Act, US EO 14110, UK AISI, India CERT-In, ISO 42001, APAC/EMEA/African digital governance frameworks
+- Compliance mapping: NIST AI RMF, NIST SP 800-228, EU AI Act, US EO 14110, UK AISI, India CERT-In, ISO 42001
 
 ---
 
