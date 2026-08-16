@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARGUS — Agentic LLM Red-Team &amp; Governance Scanner</title>
+  <title>ARGUS: Agentic LLM Red-Team &amp; Governance Scanner</title>
   <meta name="description" content="ARGUS is an open-source multi-agent framework for autonomous LLM vulnerability discovery, CVSSv4.0 scoring, and 8-framework regulatory compliance mapping. Built for Claude, GPT, and custom LLM pipelines.">
   <meta name="keywords" content="LLM security, AI red team, prompt injection, OWASP LLM, CVSSv4, SARIF, agentic AI, RAG attacks, MCP security, AI governance">
   <meta name="author" content="Sunil Gentyala">
-  <meta property="og:title" content="ARGUS — Agentic LLM Red-Team Scanner">
+  <meta property="og:title" content="ARGUS: Agentic LLM Red-Team Scanner">
   <meta property="og:description" content="Closed-loop multi-agent framework for autonomous LLM vulnerability discovery. CVSSv4.0. 8 compliance frameworks. SARIF output.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sunilgentyala.github.io/argus/">
   <meta property="og:image" content="https://opengraph.githubassets.com/1/sunilgentyala/argus">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ARGUS — Agentic LLM Red-Team Scanner">
+  <meta name="twitter:title" content="ARGUS: Agentic LLM Red-Team Scanner">
   <meta name="twitter:description" content="Autonomous LLM red-teaming. Multi-agent. CVSSv4.0. 8 compliance frameworks. Apache 2.0.">
   <link rel="canonical" href="https://sunilgentyala.github.io/argus/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -666,13 +666,13 @@
 <section id="surfaces">
   <div class="section-label">Attack surface</div>
   <h2>What ARGUS scans</h2>
-  <p class="section-sub">Full coverage across direct endpoints and complex agentic topologies — the surfaces static scanners miss entirely.</p>
+  <p class="section-sub">Full coverage across direct endpoints and complex agentic topologies: the surfaces static scanners miss entirely.</p>
 
   <div class="cards">
     <div class="card">
       <div class="card-icon">&#127919;</div>
       <h3>Direct Endpoints</h3>
-      <p>Classic LLM attacks against completion APIs — alignment bypass, system-prompt extraction, role confusion, and jailbreaking.</p>
+      <p>Classic LLM attacks against completion APIs: alignment bypass, system-prompt extraction, role confusion, and jailbreaking.</p>
       <div class="card-skills">
         <span class="skill-chip">prompt-injection</span>
         <span class="skill-chip">jailbreaking</span>
@@ -697,7 +697,7 @@
     <div class="card">
       <div class="card-icon">&#128268;</div>
       <h3>MCP Server Meshes <span class="card-new">Agentic</span></h3>
-      <p>Model Context Protocol attack surface — tool-call interception, poisoned context injection, cross-server propagation.</p>
+      <p>Model Context Protocol attack surface: tool-call interception, poisoned context injection, cross-server propagation.</p>
       <div class="card-skills">
         <span class="skill-chip">tool-call-intercept</span>
         <span class="skill-chip">context-injection</span>
@@ -721,7 +721,7 @@
     <div class="card">
       <div class="card-icon">&#128296;</div>
       <h3>Tool-use / Function Calling</h3>
-      <p>Exploiting function-calling interfaces — schema confusion, argument injection, and output manipulation.</p>
+      <p>Exploiting function-calling interfaces: schema confusion, argument injection, and output manipulation.</p>
       <div class="card-skills">
         <span class="skill-chip">arg-injection</span>
         <span class="skill-chip">schema-confusion</span>
@@ -751,24 +751,24 @@
 <section id="architecture">
   <div class="section-label">How it works</div>
   <h2>The closed-loop pipeline</h2>
-  <p class="section-sub">Four specialized agents in a continuous revision loop. The Planner reads live behavioral signals and rewrites its strategy — not a fixed probe list.</p>
+  <p class="section-sub">Four specialized agents in a continuous revision loop. The Planner reads live behavioral signals and rewrites its strategy: not a fixed probe list.</p>
 
   <div class="why-banner">
     <div class="why-item">
       <h4>Adapts in real time</h4>
-      <p>The Planner revises attack strategy based on what the target does, not a static script — so defenses that beat the first wave don't beat the second.</p>
+      <p>The Planner revises attack strategy based on what the target does, not a static script: so defenses that beat the first wave don't beat the second.</p>
     </div>
     <div class="why-item">
       <h4>Diversity-constrained synthesis</h4>
-      <p>Embedding-space diversity constraint prevents the Attacker from converging on variations of the same payload — maximizing coverage, not repetition.</p>
+      <p>Embedding-space diversity constraint prevents the Attacker from converging on variations of the same payload: maximizing coverage, not repetition.</p>
     </div>
     <div class="why-item">
       <h4>Cross-session memory</h4>
-      <p>ChromaDB-backed episodic memory means each scan starts with everything learned from every previous scan — progressively sharper over time. Validated: a 4,000-synthetic-family ablation against the real ranking mechanism shows a 40.6% reduction in mean categories probed before finding the vulnerable one (5.56 cold-start vs. 3.30 memory-seeded); the benefit is concentrated in higher-accuracy regimes, with no advantage in the lowest-accuracy decile, as expected for an uninformative memory.</p>
+      <p>ChromaDB-backed episodic memory means each scan starts with everything learned from every previous scan: progressively sharper over time. Validated: a 4,000-synthetic-family ablation against the real ranking mechanism shows a 40.6% reduction in mean categories probed before finding the vulnerable one (5.56 cold-start vs. 3.30 memory-seeded); the benefit is concentrated in higher-accuracy regimes, with no advantage in the lowest-accuracy decile, as expected for an uninformative memory.</p>
     </div>
     <div class="why-item">
       <h4>Three-layer validation</h4>
-      <p>Independent semantic, judge-panel, and behavioral signals must agree before a finding is confirmed — low false-positive rate by design.</p>
+      <p>Independent semantic, judge-panel, and behavioral signals must agree before a finding is confirmed: low false-positive rate by design.</p>
     </div>
   </div>
 
@@ -798,7 +798,7 @@
       <div class="step-num">1</div>
       <div>
         <h4>Semantic Proximity</h4>
-        <p>Cosine distance against a confirmed-attack embedding space. Flags responses that land in known attack-success neighborhoods, independent of surface form — catches paraphrases and evasive reformulations.</p>
+        <p>Cosine distance against a confirmed-attack embedding space. Flags responses that land in known attack-success neighborhoods, independent of surface form: catches paraphrases and evasive reformulations.</p>
       </div>
     </div>
     <div class="step">
@@ -972,7 +972,7 @@
   </div>
 
   <!-- CVSSv4.0 Validation -->
-  <div class="section-label" style="margin-bottom:0.75rem;">CVSSv4.0 scoring engine — 48-vector validation</div>
+  <div class="section-label" style="margin-bottom:0.75rem;">CVSSv4.0 scoring engine: 48-vector validation</div>
   <p style="font-size:0.875rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.65;">
     The scoring engine implements the official FIRST MacroVector/lookup-table/interpolation algorithm (ported from FIRSTdotorg/cvss-v4-calculator), not an approximation. 48 hand-crafted test vectors validated against that reference implementation: 48/48 exact matches, 0.0 mean deviation. Five representative cases:
   </p>
@@ -1237,13 +1237,13 @@ pip install -e .</pre>
 <section>
   <div class="section-label">Regulatory coverage</div>
   <h2>7 compliance frameworks</h2>
-  <p class="section-sub">Every confirmed finding is automatically tagged to applicable regulatory articles — ready for your audit trail or GRC team.</p>
+  <p class="section-sub">Every confirmed finding is automatically tagged to applicable regulatory articles: ready for your audit trail or GRC team.</p>
 
   <div class="compliance-grid">
     <div class="compliance-card">
       <div class="compliance-flag">&#127482;&#127480;</div>
       <h3>NIST AI RMF</h3>
-      <p>Govern, Map, Measure, Manage — full control framework mapping.</p>
+      <p>Govern, Map, Measure, Manage: full control framework mapping.</p>
     </div>
     <div class="compliance-card">
       <div class="compliance-flag">&#127466;&#127482;</div>
@@ -1301,25 +1301,25 @@ pip install -e .</pre>
     <div class="card">
       <div class="card-icon">&#128196;</div>
       <h3>HTML Reports</h3>
-      <p>Self-contained HTML output with severity-colour-coded findings table. Attach to GRC tickets or email to security stakeholders — no external assets required.</p>
+      <p>Self-contained HTML output with severity-colour-coded findings table. Attach to GRC tickets or email to security stakeholders: no external assets required.</p>
       <div class="card-skills"><span class="skill-chip">html_reporter.py</span></div>
     </div>
     <div class="card">
       <div class="card-icon">&#127937;</div>
       <h3>Direct SARIF flag</h3>
-      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">--sarif argus.sarif</code> flag lets you specify the SARIF output path directly — perfect for CI pipelines that pick up a specific filename.</p>
+      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">--sarif argus.sarif</code> flag lets you specify the SARIF output path directly: perfect for CI pipelines that pick up a specific filename.</p>
       <div class="card-skills"><span class="skill-chip">--sarif</span><span class="skill-chip">CI/CD</span></div>
     </div>
     <div class="card">
       <div class="card-icon">&#129302;</div>
       <h3>Threat Intelligence</h3>
-      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">argus/intelligence/</code> module ships a curated LLM attack signal database — helping the Planner bias toward highest-yield vectors per model family.</p>
+      <p>New <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">argus/intelligence/</code> module ships a curated LLM attack signal database: helping the Planner bias toward highest-yield vectors per model family.</p>
       <div class="card-skills"><span class="skill-chip">ThreatIntelligence</span><span class="skill-chip">model-profiles</span></div>
     </div>
     <div class="card">
       <div class="card-icon">&#128640;</div>
       <h3>Claude Opus 4.8</h3>
-      <p>Planner now defaults to <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">claude-opus-4-8</code> — Anthropic's latest reasoning model. Attack strategy quality improves measurably on complex agentic surfaces.</p>
+      <p>Planner now defaults to <code style="font-size:.8rem;background:var(--bg);padding:.1rem .3rem;border-radius:3px;">claude-opus-4-8</code>: Anthropic's latest reasoning model. Attack strategy quality improves measurably on complex agentic surfaces.</p>
       <div class="card-skills"><span class="skill-chip">claude-opus-4-8</span></div>
     </div>
   </div>

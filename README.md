@@ -11,20 +11,20 @@
 
 ARGUS replaces static probe-and-detect pipelines with a closed-loop multi-agent architecture that reasons about attack strategy, synthesizes novel payloads, evaluates results through a three-layer detection stack, and maps every confirmed finding to CVSSv4.0 vectors and global regulatory frameworks.
 
-> Companion paper (in preparation): *"ARGUS: An Agentic Red-Team Framework for Autonomous LLM Vulnerability Discovery and Regulatory Compliance Mapping"* — Sunil Gentyala, HCLTech, Dallas TX
+> Companion paper, accepted at ICCVBIC 2026 (paper ID ICCVBIC-383): *"ARGUS: An Agentic Red-Team Framework for Autonomous LLM Vulnerability Discovery and Regulatory Compliance Mapping"*, Sunil Gentyala, HCLTech, Dallas TX
 
-**[Live demo site](https://sunilgentyala.github.io/argus/) — [Star on GitHub](https://github.com/sunilgentyala/argus) — [Connect on LinkedIn](https://www.linkedin.com/in/sunilgentyala/)**
+**[Live demo site](https://sunilgentyala.github.io/argus/) &middot; [Star on GitHub](https://github.com/sunilgentyala/argus) &middot; [Connect on LinkedIn](https://www.linkedin.com/in/sunilgentyala/)**
 
 ---
 
 ## What's New in v1.1.0
 
-- **HTML reports** — self-contained HTML output alongside SARIF and JSON
-- **`--sarif` flag** — direct SARIF file path for CI/CD (`argus scan ... --sarif argus.sarif`)
-- **Threat intelligence module** — curated LLM attack signal database in `argus/intelligence/`
-- **Model update** — Planner now defaults to `claude-opus-4-8`
+- **HTML reports**: self-contained HTML output alongside SARIF and JSON
+- **`--sarif` flag**: direct SARIF file path for CI/CD (`argus scan ... --sarif argus.sarif`)
+- **Threat intelligence module**: curated LLM attack signal database in `argus/intelligence/`
+- **Model update**: Planner now defaults to `claude-opus-4-8`
 - **Apache 2.0 LICENSE** file added
-- **CONTRIBUTING.md** — community contribution guide
+- **CONTRIBUTING.md**: community contribution guide
 
 ---
 
@@ -68,9 +68,9 @@ Target LLM / Pipeline
 
 ### Detection Stack
 
-1. **Semantic proximity** — cosine distance against confirmed-attack embedding space
-2. **LLM-as-judge panel** — multi-model verdict with configurable affirmative threshold
-3. **Behavioral trace analysis** — pipeline telemetry anomaly detection
+1. **Semantic proximity**: cosine distance against confirmed-attack embedding space
+2. **LLM-as-judge panel**: multi-model verdict with configurable affirmative threshold
+3. **Behavioral trace analysis**: pipeline telemetry anomaly detection
 
 ### Scoring and Compliance
 
@@ -271,7 +271,7 @@ If you use ARGUS in research or cite this framework, please use:
   author       = {Gentyala, Sunil},
   year         = {2026},
   institution  = {HCLTech, Dallas TX},
-  note         = {In preparation. \url{https://github.com/sunilgentyala/argus}}
+  note         = {Accepted at ICCVBIC 2026, paper ID ICCVBIC-383. \url{https://github.com/sunilgentyala/argus}}
 }
 ```
 
@@ -285,8 +285,8 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## Author
 
-**Sunil Gentyala** — IEEE Senior Member
-Lead Cybersecurity and AI Security COnsultant, HCLTech, Dallas, TX, USA
+**Sunil Gentyala**, IEEE Senior Member
+Lead Cybersecurity and AI Security Consultant, HCLTech, Dallas, TX, USA
 sunil.gentyala@ieee.org
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://www.linkedin.com/in/sunilgentyala/)
@@ -297,6 +297,6 @@ sunil.gentyala@ieee.org
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE).
+Apache-2.0, see [LICENSE](LICENSE).
 
 For authorized security testing only.

@@ -4,13 +4,13 @@ Thank you for your interest in contributing to ARGUS. This project advances open
 
 ## Ways to Contribute
 
-- **Bug reports** — open an [issue](https://github.com/sunilgentyala/argus/issues) with reproduction steps
-- **New attack strategies** — add entries to `argus/payloads/synthesizer.py` category prompts
-- **New compliance frameworks** — extend `argus/compliance/mapper.py`
-- **New target adapters** — subclass `argus.targets.base.Target`
-- **Detection improvements** — enhance the LLM-as-judge rubric in `argus/detectors/llm_judge.py`
-- **Documentation** — improve README, inline docs, or the GitHub Pages site
-- **Tests** — add unit or integration tests under `tests/`
+- **Bug reports**: open an [issue](https://github.com/sunilgentyala/argus/issues) with reproduction steps
+- **New attack strategies**: add entries to `argus/payloads/synthesizer.py` category prompts
+- **New compliance frameworks**: extend `argus/compliance/mapper.py`
+- **New target adapters**: subclass `argus.targets.base.Target`
+- **Detection improvements**: enhance the LLM-as-judge rubric in `argus/detectors/llm_judge.py`
+- **Documentation**: improve README, inline docs, or the GitHub Pages site
+- **Tests**: add unit or integration tests under `tests/`
 
 ## Development Setup
 
@@ -31,7 +31,7 @@ pytest tests/unit/ -v
 ## Pull Request Guidelines
 
 1. Fork the repo and create a feature branch from `main`
-2. Keep changes focused — one logical change per PR
+2. Keep changes focused: one logical change per PR
 3. Ensure `pytest tests/unit/ -v` passes
 4. Run `ruff check .` and fix any lint errors
 5. Update relevant docs and the `CHANGELOG.md` if one exists
