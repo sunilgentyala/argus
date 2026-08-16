@@ -59,9 +59,14 @@ Changelog     = "https://github.com/sunilgentyala/argus/releases"
 [project.scripts]
 argus = "argus.cli:main"
 
+[tool.hatch.build.targets.wheel]
+packages = ["argus"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "UP", "S", "B"]
 ignore = ["S101", "S311"]
 

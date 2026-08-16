@@ -1,9 +1,13 @@
-"""Reporter Agent — generates compliance-mapped output."""
+"""Reporter Agent: generates compliance-mapped output."""
 from __future__ import annotations
+
+from typing import Any
+
 from argus.agents.base import Agent, AgentRole
-from argus.reporting.sarif import SARIFReporter
-from argus.reporting.html_reporter import HTMLReporter
 from argus.core.session import SessionState
+from argus.reporting.html_reporter import HTMLReporter
+from argus.reporting.sarif import SARIFReporter
+
 
 class ReporterAgent(Agent):
     role = AgentRole.REPORTER
@@ -18,12 +22,13 @@ class ReporterAgent(Agent):
         self._output_dir = output_dir
         self._sarif_path = sarif_path
 
-    def generate(self, session: SessionState) -> dict:
-        import json, pathlib
+    def generate(self, session: SessionState) -> dict[str, Any]:
+        import json
+        import pathlib
         out = pathlib.Path(self._output_dir)
         out.mkdir(parents=True, exist_ok=True)
 
-        # SARIF — write to explicit path if given, else to output-dir
+        # SARIF: write to explicit path if given, else to output-dir
         sarif_out = self._sarif_path or str(out / f"{session.session_id}.sarif.json")
         sarif = self._sarif.generate(session, output_path=sarif_out)
 

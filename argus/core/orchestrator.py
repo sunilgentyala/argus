@@ -1,5 +1,5 @@
 """
-Multi-agent orchestrator — coordinates the Planner → Attacker → Evaluator → Reporter cycle.
+Multi-agent orchestrator: coordinates the Planner → Attacker → Evaluator → Reporter cycle.
 """
 
 from __future__ import annotations
@@ -7,11 +7,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from argus.agents.planner import PlannerAgent, AttackPlan
 from argus.agents.attacker import AttackerAgent
 from argus.agents.evaluator import EvaluatorAgent
+from argus.agents.planner import AttackPlan, PlannerAgent
 from argus.agents.reporter import ReporterAgent
-from argus.core.session import SessionState, ScanPhase
+from argus.core.session import ScanPhase, SessionState
 from argus.memory.episodic import EpisodicMemory
 from argus.memory.hitlog import HitLog
 

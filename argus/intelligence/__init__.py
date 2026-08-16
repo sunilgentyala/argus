@@ -50,7 +50,7 @@ _THREAT_SIGNALS: list[ThreatSignal] = [
         ],
         blocked_phrases=[],
         typical_cvss_range=(7.0, 9.4),
-        references=["Greshake et al. (2023) — Not What You've Signed Up For"],
+        references=["Greshake et al. (2023): Not What You've Signed Up For"],
     ),
     ThreatSignal(
         category="LLM06",
@@ -74,7 +74,7 @@ _THREAT_SIGNALS: list[ThreatSignal] = [
         ],
         blocked_phrases=[],
         typical_cvss_range=(7.5, 9.4),
-        references=["OWASP LLM08:2025", "Anthropic (2024) — Sleeper Agents"],
+        references=["OWASP LLM08:2025", "Anthropic (2024): Sleeper Agents"],
     ),
     ThreatSignal(
         category="LLM05",

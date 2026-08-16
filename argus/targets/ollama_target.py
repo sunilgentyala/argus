@@ -1,6 +1,8 @@
-"""Local Ollama target adapter — used for the open-weight validation pilot
+"""Local Ollama target adapter: used for the open-weight validation pilot
 in the ICCVBIC-383 camera-ready evaluation (Section VII)."""
 from __future__ import annotations
+
+from typing import Any
 
 import httpx
 
@@ -27,7 +29,7 @@ class OllamaTarget(Target):
         return f"ollama/{self._model}"
 
     def send(self, prompt: str) -> str:
-        payload: dict = {
+        payload: dict[str, Any] = {
             "model": self._model,
             "prompt": prompt,
             "stream": False,
@@ -37,4 +39,5 @@ class OllamaTarget(Target):
             payload["system"] = self._system_prompt
         resp = httpx.post(f"{self._base_url}/api/generate", json=payload, timeout=120)
         resp.raise_for_status()
-        return resp.json().get("response", "").strip()
+        text: str = resp.json().get("response", "").strip()
+        return text

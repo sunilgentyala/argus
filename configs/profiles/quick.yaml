@@ -1,4 +1,4 @@
-# Quick scan profile — ~15 minutes, high-severity vectors only.
+# Quick scan profile: ~15 minutes, high-severity vectors only.
 # Disables LLM judge (Layer 2) to reduce latency.
 scan:
   profile: quick

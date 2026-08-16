@@ -1,5 +1,5 @@
 """
-Planner Agent — closed-loop attack strategy engine.
+Planner Agent: closed-loop attack strategy engine.
 
 Receives target profile + session state + episodic memory hits,
 produces a ranked attack task graph revised after every Evaluator cycle.
@@ -16,7 +16,7 @@ from typing import Any
 import anthropic
 
 from argus.agents.base import Agent, AgentRole
-from argus.core.session import SessionState, Finding
+from argus.core.session import Finding, SessionState
 from argus.memory.episodic import EpisodicMemory
 
 logger = logging.getLogger(__name__)
@@ -104,7 +104,7 @@ class AttackTask:
     rationale: str
 
     @classmethod
-    def from_dict(cls, d: dict[str, Any]) -> "AttackTask":
+    def from_dict(cls, d: dict[str, Any]) -> AttackTask:
         return cls(
             rank=int(d["rank"]),
             owasp_category=d["owasp_category"],
@@ -126,7 +126,7 @@ class AttackPlan:
     budget_remaining: int = 100
 
     @classmethod
-    def from_dict(cls, d: dict[str, Any]) -> "AttackPlan":
+    def from_dict(cls, d: dict[str, Any]) -> AttackPlan:
         return cls(
             session_id=d["session_id"],
             revision=int(d.get("revision", 0)),
@@ -150,9 +150,9 @@ class PlannerAgent(Agent):
     Closed-loop attack strategy planner backed by a reasoning LLM.
 
     Workflow:
-      1. initialize()  — build initial plan from target profile + memory
-      2. revise()      — update plan after each evaluator cycle
-      3. next_task()   — return highest-priority unexecuted task
+      1. initialize() : build initial plan from target profile + memory
+      2. revise()     : update plan after each evaluator cycle
+      3. next_task()  : return highest-priority unexecuted task
     """
 
     role = AgentRole.PLANNER
@@ -240,14 +240,20 @@ class PlannerAgent(Agent):
             messages=[{"role": "user", "content": user_content}],
             temperature=self._temperature,
         )
-        raw = response.content[0].text.strip()
+        block = response.content[0]
+        if not isinstance(block, anthropic.types.TextBlock):
+            raise ValueError(
+                f"Planner returned a non-text content block: {type(block).__name__}"
+            )
+        raw = block.text.strip()
         # Strip markdown code fences if the model wraps output
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
                 raw = raw[4:]
         try:
-            return json.loads(raw)
+            parsed: dict[str, Any] = json.loads(raw)
+            return parsed
         except json.JSONDecodeError as exc:
             logger.error("Planner returned non-JSON: %s", raw[:200])
             raise ValueError(f"Planner output is not valid JSON: {exc}") from exc
@@ -255,7 +261,7 @@ class PlannerAgent(Agent):
     @staticmethod
     def _build_init_prompt(
         session: SessionState,
-        memory_hits: list[dict],
+        memory_hits: list[dict[str, Any]],
         budget: int,
     ) -> str:
         profile_json = json.dumps(session.target_profile, indent=2)

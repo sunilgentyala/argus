@@ -1,5 +1,5 @@
 """
-Global Compliance Mapper — maps ARGUS findings to regulatory framework obligations.
+Global Compliance Mapper: maps ARGUS findings to regulatory framework obligations.
 
 Covers: NIST AI RMF, NIST SP 800-228, EU AI Act, US EO 14110, UK AISI,
 India CERT-In, ISO/IEC 42001 (7 frameworks). APAC, EMEA-beyond-the-EU-AI-Act,
@@ -197,8 +197,8 @@ _MAPPING: dict[str, dict[str, list[ComplianceTag]]] = {
 }
 
 # ── NIST SP 800-228 API protection overlays ───────────────────────────────────
-# NIST SP 800-228 (Jun. 2025) — Guidelines for API Protection for Cloud-Native
-# Systems — provides controls directly applicable to LLM API surfaces.
+# NIST SP 800-228 (Jun. 2025): Guidelines for API Protection for Cloud-Native
+# Systems: provides controls directly applicable to LLM API surfaces.
 
 _SP800228_MAPPING: dict[str, list[ComplianceTag]] = {
     "LLM01": [
@@ -236,12 +236,15 @@ _SP800228_MAPPING: dict[str, list[ComplianceTag]] = {
     "LLM08": [
         ComplianceTag("NIST SP 800-228", "§6.1 Least-Privilege API Design", "technical",
             "mandatory",
-            "Agentic API surfaces must enforce least-privilege to prevent excessive agency actions"),
+            "Agentic API surfaces must enforce least-privilege to prevent "
+            "excessive agency actions"),
     ],
 }
 
 
-def _apply_sp800228_overlays(mapping: dict) -> dict:
+def _apply_sp800228_overlays(
+    mapping: dict[str, dict[str, list[ComplianceTag]]],
+) -> dict[str, dict[str, list[ComplianceTag]]]:
     """Merge NIST SP 800-228 entries into the main mapping table."""
     for category, tags in _SP800228_MAPPING.items():
         if category in mapping:

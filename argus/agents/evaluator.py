@@ -1,4 +1,4 @@
-"""Evaluator Agent — orchestrates the three-layer detection stack.
+"""Evaluator Agent: orchestrates the three-layer detection stack.
 
 Layer 1 (semantic) gates Layer 2 (judge) when an exemplar corpus has been
 loaded for the category, matching paper Section V.E: "Layer 2 ... evaluates
@@ -9,23 +9,27 @@ requires a pipeline target that exposes tool-call telemetry on the session's
 target_profile; see Section VIII.C for the honest scope of that dependency.
 """
 from __future__ import annotations
+
 from argus.agents.base import Agent, AgentRole
+from argus.compliance.mapper import ComplianceMapper
+from argus.core.session import Finding, SessionState
 from argus.detectors.llm_judge import LLMJudgeDetector
 from argus.detectors.semantic import SemanticProximityDetector
 from argus.payloads.synthesizer import Payload
 from argus.scoring.cvss4 import CVSSv4Scorer, build_vector
-from argus.compliance.mapper import ComplianceMapper
-from argus.core.session import SessionState, Finding
+
 
 class EvaluatorAgent(Agent):
     role = AgentRole.EVALUATOR
     def __init__(self, judge: LLMJudgeDetector, scorer: CVSSv4Scorer,
                  mapper: ComplianceMapper,
-                 semantic: SemanticProximityDetector | None = None) -> None:
+                 semantic: SemanticProximityDetector | None = None,
+                 frameworks: list[str] | None = None) -> None:
         self._judge = judge
         self._scorer = scorer
         self._mapper = mapper
         self._semantic = semantic or SemanticProximityDetector()
+        self._frameworks = frameworks
 
     def evaluate(self, payload: Payload, response: str,
                  session: SessionState) -> list[Finding]:
@@ -46,7 +50,7 @@ class EvaluatorAgent(Agent):
             session.target_profile.get("deployment_context", "general"),
         )
         score, severity = self._scorer.score(vector)
-        tags = self._mapper.tag_strings(payload.owasp_category)
+        tags = self._mapper.tag_strings(payload.owasp_category, self._frameworks)
         finding = Finding(
             finding_id=fid,
             owasp_category=payload.owasp_category,

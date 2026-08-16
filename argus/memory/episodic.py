@@ -1,5 +1,5 @@
 """
-Episodic memory — stores embeddings of confirmed attack payloads
+Episodic memory: stores embeddings of confirmed attack payloads
 indexed by OWASP category and target model family.
 
 Uses an in-memory store by default; swap _backend for ChromaDB or Qdrant
@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import math
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,12 +27,12 @@ class MemoryEntry:
     embedding: list[float]
     session_id: str
     timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
 
 def _cosine_similarity(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     mag_a = math.sqrt(sum(x * x for x in a))
     mag_b = math.sqrt(sum(x * x for x in b))
     if mag_a == 0 or mag_b == 0:

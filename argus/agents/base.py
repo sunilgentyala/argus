@@ -1,10 +1,11 @@
 """Base agent interface for all ARGUS agents."""
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from enum import Enum
+
+from abc import ABC
+from enum import StrEnum
 
 
-class AgentRole(str, Enum):
+class AgentRole(StrEnum):
     PLANNER   = "planner"
     ATTACKER  = "attacker"
     EVALUATOR = "evaluator"

@@ -1,10 +1,14 @@
-"""Attacker Agent — wraps PayloadSynthesizer, MutationEngine, and target delivery."""
+"""Attacker Agent: wraps PayloadSynthesizer, MutationEngine, and target delivery."""
 from __future__ import annotations
+
+from typing import Any
+
 from argus.agents.base import Agent, AgentRole
-from argus.payloads.synthesizer import PayloadSynthesizer, Payload
-from argus.payloads.mutator import MutationEngine
 from argus.agents.planner import AttackTask
 from argus.core.session import SessionState
+from argus.payloads.mutator import MutationEngine
+from argus.payloads.synthesizer import Payload, PayloadSynthesizer
+from argus.targets.base import Target
 from argus.targets.profiler import TargetProfiler
 
 
@@ -15,7 +19,7 @@ class AttackerAgent(Agent):
         self,
         synthesizer: PayloadSynthesizer,
         profiler: TargetProfiler,
-        target,
+        target: Target,
         mutation_budget: int = 3,
         enable_mutations: bool = True,
     ) -> None:
@@ -24,7 +28,7 @@ class AttackerAgent(Agent):
         self._target = target
         self._mutator = MutationEngine(budget=mutation_budget) if enable_mutations else None
 
-    def profile_target(self, session: SessionState) -> dict:
+    def profile_target(self, session: SessionState) -> dict[str, Any]:
         return self._profiler.profile(self._target, session)
 
     def generate_payloads(self, task: AttackTask, session: SessionState) -> list[Payload]:

@@ -1,6 +1,13 @@
 """OpenAI target adapter."""
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from argus.targets.base import Target
+
+if TYPE_CHECKING:
+    from openai.types.chat import ChatCompletionMessageParam
+
 
 class OpenAITarget(Target):
     def __init__(self, model: str = "gpt-4o", api_key: str | None = None,
@@ -15,7 +22,7 @@ class OpenAITarget(Target):
         return f"openai/{self._model}"
 
     def send(self, prompt: str) -> str:
-        messages = []
+        messages: list[ChatCompletionMessageParam] = []
         if self._system_prompt:
             messages.append({"role": "system", "content": self._system_prompt})
         messages.append({"role": "user", "content": prompt})

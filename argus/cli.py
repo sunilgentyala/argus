@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Any
 
 import click
 import yaml
@@ -29,6 +29,7 @@ from argus.memory.episodic import EpisodicMemory
 from argus.memory.hitlog import HitLog
 from argus.payloads.synthesizer import PayloadSynthesizer
 from argus.scoring.cvss4 import CVSSv4Scorer
+from argus.targets.base import Target
 from argus.targets.profiler import TargetProfiler
 
 
@@ -41,16 +42,19 @@ def _setup_logging(verbose: bool) -> None:
     )
 
 
-def _load_config(config_path: str | None) -> dict:
+def _load_config(config_path: str | None) -> dict[str, Any]:
     default = Path(__file__).parent.parent / "configs" / "argus.default.yaml"
     path = Path(config_path) if config_path else default
     if not path.exists():
         raise click.ClickException(f"Config not found: {path}")
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        loaded: dict[str, Any] = yaml.safe_load(f)
+    return loaded
 
 
-def _build_target(target: str, model: str | None, system_prompt: str, api_key: str | None):
+def _build_target(
+    target: str, model: str | None, system_prompt: str, api_key: str | None
+) -> Target:
     if target == "anthropic":
         from argus.targets.anthropic_target import AnthropicTarget
         return AnthropicTarget(
@@ -80,7 +84,7 @@ def _build_target(target: str, model: str | None, system_prompt: str, api_key: s
 @click.group()
 @click.version_option(version="1.1.0", prog_name="argus")
 def main() -> None:
-    """ARGUS — Agentic Red-team and Governance Unified Scanner for LLM security."""
+    """ARGUS: Agentic Red-team and Governance Unified Scanner for LLM security."""
 
 
 @main.command()
@@ -107,14 +111,14 @@ def main() -> None:
 @click.option("--verbose", "-v", is_flag=True, default=False)
 def scan(
     target: str,
-    model: Optional[str],
+    model: str | None,
     system_prompt: str,
     profile: str,
-    budget: Optional[int],
-    config: Optional[str],
+    budget: int | None,
+    config: str | None,
     output_dir: str,
-    sarif: Optional[str],
-    api_key: Optional[str],
+    sarif: str | None,
+    api_key: str | None,
     verbose: bool,
 ) -> None:
     """Run an ARGUS vulnerability scan against a target LLM."""
@@ -134,16 +138,15 @@ def scan(
         max_tokens=agents_cfg.get("planner", {}).get("max_tokens", 2048),
     )
     synthesizer = PayloadSynthesizer(
-        model=agents_cfg.get("synthesizer", {}).get("model", "claude-sonnet-4-6"),
+        synthesis_model=agents_cfg.get("synthesizer", {}).get("model", "claude-sonnet-4-6"),
     )
     judge = LLMJudgeDetector(
         model=agents_cfg.get("judge", {}).get("model", "claude-sonnet-4-6"),
         min_affirmative=agents_cfg.get("judge", {}).get("min_affirmative", 2),
     )
     scorer = CVSSv4Scorer()
-    mapper = ComplianceMapper(
-        frameworks=cfg.get("compliance", {}).get("frameworks"),
-    )
+    mapper = ComplianceMapper()
+    frameworks = cfg.get("compliance", {}).get("frameworks")
     memory = EpisodicMemory(
         persist_path=cfg.get("memory", {}).get("persist_path", "./argus-memory.json"),
     )
@@ -160,7 +163,7 @@ def scan(
         mutation_budget=mutation_budget,
         enable_mutations=mutation_budget > 0,
     )
-    evaluator = EvaluatorAgent(judge=judge, scorer=scorer, mapper=mapper)
+    evaluator = EvaluatorAgent(judge=judge, scorer=scorer, mapper=mapper, frameworks=frameworks)
     reporter = ReporterAgent(output_dir=output_dir, sarif_path=sarif)
 
     orchestrator = Orchestrator(
@@ -181,7 +184,7 @@ def scan(
     summary = report["session"]
 
     click.echo("\n" + "=" * 60)
-    click.echo(f"  ARGUS SCAN COMPLETE")
+    click.echo("  ARGUS SCAN COMPLETE")
     click.echo(f"  Session : {summary['session_id']}")
     click.echo(f"  Findings: {summary['total_findings']}  "
                f"(Critical={summary['critical']}  High={summary['high']}  "
@@ -198,6 +201,7 @@ def scan(
 def show(report_path: str) -> None:
     """Pretty-print a saved ARGUS JSON report."""
     import json
+
     from rich.console import Console
     from rich.table import Table
 
@@ -206,7 +210,7 @@ def show(report_path: str) -> None:
         report = json.load(f)
 
     s = report["session"]
-    console.print(f"\n[bold cyan]ARGUS Report[/] — session {s['session_id']}")
+    console.print(f"\n[bold cyan]ARGUS Report[/]: session {s['session_id']}")
     console.print(f"Phase: {s['phase']}  |  Payloads sent: {s['payloads_sent']}")
 
     table = Table(title="Confirmed Findings")

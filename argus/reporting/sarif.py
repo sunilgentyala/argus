@@ -1,5 +1,5 @@
 """
-SARIF v2.1 reporter — native GitHub Actions / GitLab CI / Azure DevOps output.
+SARIF v2.1 reporter: native GitHub Actions / GitLab CI / Azure DevOps output.
 
 Produces a SARIF 2.1.0 JSON file from an ARGUS session, enabling zero-config
 integration with any CI/CD platform that supports the SARIF standard.
@@ -8,10 +8,11 @@ integration with any CI/CD platform that supports the SARIF standard.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
-from argus.core.session import SessionState, Finding
+from argus.core.session import Finding, SessionState
 
 _SARIF_SCHEMA = "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
 _SARIF_VERSION = "2.1.0"
@@ -28,7 +29,7 @@ _SEVERITY_MAP = {
 }
 
 
-def _finding_to_result(finding: Finding) -> dict:
+def _finding_to_result(finding: Finding) -> dict[str, Any]:
     return {
         "ruleId": finding.owasp_category,
         "level": _SEVERITY_MAP.get(finding.cvss_severity, "warning"),
@@ -53,18 +54,18 @@ def _finding_to_result(finding: Finding) -> dict:
     }
 
 
-def _owasp_rule(category: str) -> dict:
+def _owasp_rule(category: str) -> dict[str, Any]:
     descriptions = {
-        "LLM01": "Prompt Injection — direct, indirect, or cross-prompt injection attack",
-        "LLM02": "Insecure Output Handling — unsafe rendering of LLM-generated content",
-        "LLM03": "Training Data Poisoning — backdoor or integrity attack on training data",
-        "LLM04": "Model Denial of Service — resource exhaustion via adversarial input",
-        "LLM05": "Supply Chain Vulnerabilities — compromise via third-party components",
-        "LLM06": "Sensitive Information Disclosure — leakage of protected system data",
-        "LLM07": "Insecure Plugin Design — scope escalation via tool or plugin abuse",
-        "LLM08": "Excessive Agency — agent actions beyond authorised scope",
-        "LLM09": "Overreliance — induced hallucination in safety-critical contexts",
-        "LLM10": "Model Theft — functional extraction via black-box query abuse",
+        "LLM01": "Prompt Injection: direct, indirect, or cross-prompt injection attack",
+        "LLM02": "Insecure Output Handling: unsafe rendering of LLM-generated content",
+        "LLM03": "Training Data Poisoning: backdoor or integrity attack on training data",
+        "LLM04": "Model Denial of Service: resource exhaustion via adversarial input",
+        "LLM05": "Supply Chain Vulnerabilities: compromise via third-party components",
+        "LLM06": "Sensitive Information Disclosure: leakage of protected system data",
+        "LLM07": "Insecure Plugin Design: scope escalation via tool or plugin abuse",
+        "LLM08": "Excessive Agency: agent actions beyond authorised scope",
+        "LLM09": "Overreliance: induced hallucination in safety-critical contexts",
+        "LLM10": "Model Theft: functional extraction via black-box query abuse",
     }
     return {
         "id": category,
@@ -76,7 +77,7 @@ def _owasp_rule(category: str) -> dict:
 
 
 class SARIFReporter:
-    def generate(self, session: SessionState, output_path: str | None = None) -> dict:
+    def generate(self, session: SessionState, output_path: str | None = None) -> dict[str, Any]:
         confirmed = session.confirmed_findings()
         rules_used = list({f.owasp_category for f in confirmed})
 
@@ -99,7 +100,7 @@ class SARIFReporter:
                             "executionSuccessful": True,
                             "startTimeUtc": session.started_at,
                             "endTimeUtc": session.completed_at
-                                or datetime.now(timezone.utc).isoformat(),
+                                or datetime.now(UTC).isoformat(),
                         }
                     ],
                     "properties": {

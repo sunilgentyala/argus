@@ -1,9 +1,9 @@
-"""HitLog — append-only confirmed-finding ledger in AVID-compatible JSONL."""
+"""HitLog: append-only confirmed-finding ledger in AVID-compatible JSONL."""
 
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from argus.core.session import Finding, SessionState
@@ -28,7 +28,7 @@ class HitLog:
             "detection_layer": finding.detection_layer,
             "compliance_tags": finding.compliance_tags,
             "target_model_family": session.target_profile.get("model_family", "unknown"),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
         with self._path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(record) + "\n")

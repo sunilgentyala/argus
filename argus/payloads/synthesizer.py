@@ -1,5 +1,5 @@
 """
-Payload Synthesizer — LLM-powered novel attack string generation
+Payload Synthesizer: LLM-powered novel attack string generation
 with embedding-space diversity enforcement.
 
 For each (OWASP category, strategy, target profile) triple the synthesizer:
@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import logging
 import math
-import re
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Iterator
+from typing import Any
 
 import anthropic
 
@@ -130,7 +130,7 @@ class Payload:
 # ── Embedding utilities ────────────────────────────────────────────────────────
 
 def _cosine_distance(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     mag_a = math.sqrt(sum(x * x for x in a))
     mag_b = math.sqrt(sum(x * x for x in b))
     if mag_a == 0 or mag_b == 0:
@@ -178,7 +178,7 @@ class PayloadSynthesizer:
         owasp_category: str,
         surface: str,
         strategy: str,
-        target_profile: dict,
+        target_profile: dict[str, Any],
         batch_size: int = 10,
         session_id: str = "",
     ) -> list[Payload]:
@@ -242,7 +242,7 @@ class PayloadSynthesizer:
         owasp_category: str,
         surface: str,
         strategy: str,
-        target_profile: dict,
+        target_profile: dict[str, Any],
         session_id: str = "",
     ) -> Iterator[Payload]:
         """Yield admitted payloads one at a time (for low-memory streaming scans)."""
@@ -296,7 +296,7 @@ class PayloadSynthesizer:
         if diversity_index > 0:
             user_prompt += (
                 f"\n\nIMPORTANT: This is attempt #{diversity_index + 1}. "
-                "The payload MUST be semantically distinct from prior attempts — "
+                "The payload MUST be semantically distinct from prior attempts: "
                 "use a different structural approach, framing, or linguistic register."
             )
 
@@ -314,7 +314,14 @@ class PayloadSynthesizer:
                 messages=[{"role": "user", "content": user_prompt}],
                 temperature=1.0,
             )
-            return response.content[0].text.strip()
+            block = response.content[0]
+            if not isinstance(block, anthropic.types.TextBlock):
+                logger.error(
+                    "Unexpected non-text content block from synthesis model: %s",
+                    type(block).__name__,
+                )
+                return ""
+            return block.text.strip()
         except anthropic.APIError as exc:
             logger.error("Synthesis API error: %s", exc)
             return ""
@@ -334,9 +341,10 @@ class PayloadSynthesizer:
         return [x / norm for x in vec]
 
     @staticmethod
-    def _extract_blocked_patterns(profile: dict) -> list[str]:
+    def _extract_blocked_patterns(profile: dict[str, Any]) -> list[str]:
         """Extract known-blocked patterns from target profile for hint injection."""
-        return profile.get("blocked_patterns", [
+        patterns: list[str] = profile.get("blocked_patterns", [
             "DAN", "jailbreak", "ignore previous instructions",
             "pretend you are", "developer mode", "token smuggling",
         ])
+        return patterns

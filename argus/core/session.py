@@ -9,12 +9,12 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Any
 
 
-class ScanPhase(str, Enum):
+class ScanPhase(StrEnum):
     INIT       = "init"
     PROFILING  = "profiling"
     PLANNING   = "planning"
@@ -28,7 +28,7 @@ class ScanPhase(str, Enum):
 # MITRE ATLAS technique IDs for each OWASP LLM Top 10 (2025) category
 _ATLAS_TECHNIQUE: dict[str, str] = {
     "LLM01": "AML.T0051.002",  # Indirect Prompt Injection / LLM Prompt Injection
-    "LLM02": "AML.T0054",      # Prompt Injection — output handling variant
+    "LLM02": "AML.T0054",      # Prompt Injection: output handling variant
     "LLM03": "AML.T0020",      # Poison Training Data
     "LLM04": "AML.T0034",      # Cost Harvesting (resource exhaustion)
     "LLM05": "AML.T0010",      # ML Supply Chain Compromise
@@ -62,7 +62,7 @@ class Finding:
     owasp_version: str = _OWASP_LLM_VERSION
     mutation_applied: str = "none"
     timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     def __post_init__(self) -> None:
@@ -102,7 +102,7 @@ class SessionState:
     payloads_sent: int = 0
     payloads_budget: int = 100
     started_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
     completed_at: str = ""
     scan_profile: str = "full"
@@ -119,7 +119,7 @@ class SessionState:
     def transition(self, phase: ScanPhase) -> None:
         self.phase = phase
         if phase == ScanPhase.COMPLETE:
-            self.completed_at = datetime.now(timezone.utc).isoformat()
+            self.completed_at = datetime.now(UTC).isoformat()
 
     def summary(self) -> dict[str, Any]:
         confirmed = self.confirmed_findings()

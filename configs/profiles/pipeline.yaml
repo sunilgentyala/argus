@@ -1,4 +1,4 @@
-# Pipeline scan profile — full multi-surface coverage.
+# Pipeline scan profile: full multi-surface coverage.
 # Requires target instrumentation for behavioral trace analysis.
 scan:
   profile: pipeline

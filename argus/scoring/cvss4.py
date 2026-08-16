@@ -11,57 +11,55 @@ Reference: https://www.first.org/cvss/v4.0/specification-document
 from __future__ import annotations
 
 import json
-import re
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
+from enum import StrEnum
 from pathlib import Path
-from typing import Optional
-
+from typing import Any
 
 # ── Metric enumerations ────────────────────────────────────────────────────────
 
-class AV(str, Enum):
+class AV(StrEnum):
     NETWORK   = "N"
     ADJACENT  = "A"
     LOCAL     = "L"
     PHYSICAL  = "P"
 
-class AC(str, Enum):
+class AC(StrEnum):
     LOW  = "L"
     HIGH = "H"
 
-class AT(str, Enum):
+class AT(StrEnum):
     NONE    = "N"
     PRESENT = "P"
 
-class PR(str, Enum):
+class PR(StrEnum):
     NONE = "N"
     LOW  = "L"
     HIGH = "H"
 
-class UI(str, Enum):
+class UI(StrEnum):
     NONE     = "N"
     PASSIVE  = "P"
     ACTIVE   = "A"
 
-class Impact(str, Enum):
+class Impact(StrEnum):
     NONE = "N"
     LOW  = "L"
     HIGH = "H"
 
-class SafetyImpact(str, Enum):
+class SafetyImpact(StrEnum):
     """SI and SA allow a Safety value in CVSSv4.0."""
     NONE     = "N"
     LOW      = "L"
     SAFETY   = "S"
     HIGH     = "H"
 
-class Requirement(str, Enum):
+class Requirement(StrEnum):
     LOW    = "L"
     MEDIUM = "M"
     HIGH   = "H"
 
-class Safety(str, Enum):
+class Safety(StrEnum):
     NEGLIGIBLE  = "N"
     PRESENT     = "P"
     RELEVANT    = "R"
@@ -92,11 +90,11 @@ _SEVERITY_BANDS = [
 # These represent typical base-case vectors for each LLM vulnerability class.
 # The engine uses them as defaults; callers override individual metrics.
 
-OWASP_PRESETS: dict[str, dict] = {
+OWASP_PRESETS: dict[str, dict[str, str]] = {
     "LLM01_direct": dict(
         AV="N", AC="L", AT="N", PR="N", UI="N",
         VC="H", VI="N", VA="N", SC="H", SI="N", SA="N",
-        description="Direct prompt injection — system prompt extraction"
+        description="Direct prompt injection: system prompt extraction"
     ),
     "LLM01_indirect_xpia": dict(
         AV="N", AC="L", AT="P", PR="N", UI="P",
@@ -106,7 +104,7 @@ OWASP_PRESETS: dict[str, dict] = {
     "LLM02_markdown_xss": dict(
         AV="N", AC="L", AT="N", PR="N", UI="P",
         VC="L", VI="H", VA="N", SC="H", SI="H", SA="N",
-        description="Insecure output — markdown / code injection"
+        description="Insecure output: markdown / code injection"
     ),
     "LLM03_backdoor_probe": dict(
         AV="L", AC="H", AT="P", PR="H", UI="N",
@@ -141,7 +139,7 @@ OWASP_PRESETS: dict[str, dict] = {
     "LLM08_action_boundary": dict(
         AV="N", AC="H", AT="P", PR="L", UI="N",
         VC="H", VI="H", VA="H", SC="H", SI="H", SA="H",
-        description="Excessive agency — cross-agent privilege escalation"
+        description="Excessive agency: cross-agent privilege escalation"
     ),
     "LLM09_hallucination": dict(
         AV="N", AC="L", AT="N", PR="N", UI="P",
@@ -194,7 +192,7 @@ class CVSSv4Vector:
         )
 
     @classmethod
-    def from_vector_string(cls, vector: str) -> "CVSSv4Vector":
+    def from_vector_string(cls, vector: str) -> CVSSv4Vector:
         """Parse a CVSS:4.0/... vector string into a CVSSv4Vector."""
         if not vector.startswith("CVSS:4.0/"):
             raise ValueError(f"Not a CVSSv4.0 vector: {vector}")
@@ -202,7 +200,7 @@ class CVSSv4Vector:
         return cls(**{k: v for k, v in parts.items() if k in cls.__dataclass_fields__})
 
     @classmethod
-    def from_preset(cls, preset_key: str, **overrides) -> "CVSSv4Vector":
+    def from_preset(cls, preset_key: str, **overrides: str) -> CVSSv4Vector:
         """Instantiate from an OWASP preset with optional metric overrides."""
         preset = OWASP_PRESETS.get(preset_key)
         if preset is None:
@@ -225,7 +223,7 @@ class CVSSv4Scorer:
     judgments (Table 27/`cvss4_lookup.json`), and then interpolating within
     the MacroVector by the vector's severity distance from the MacroVector's
     highest-severity member. This is NOT a linear weighted sum of metric
-    values (that was CVSSv3.1's approach) — an earlier version of this engine
+    values (that was CVSSv3.1's approach): an earlier version of this engine
     approximated it as one and produced scores that deviated from the
     official FIRST reference calculator by a mean of 4.7 points (max 7.5)
     across a 48-vector validation battery. This implementation instead
@@ -253,7 +251,7 @@ class CVSSv4Scorer:
     _IR_L = {"H": 0.0, "M": 0.1, "L": 0.2}
     _AR_L = {"H": 0.0, "M": 0.1, "L": 0.2}
 
-    _MAX_COMPOSED = {
+    _MAX_COMPOSED: dict[str, Any] = {
         "eq1": {0: ["AV:N/PR:N/UI:N/"],
                 1: ["AV:A/PR:N/UI:N/", "AV:N/PR:L/UI:N/", "AV:N/PR:N/UI:P/"],
                 2: ["AV:P/PR:N/UI:N/", "AV:A/PR:L/UI:P/"]},
@@ -270,7 +268,7 @@ class CVSSv4Scorer:
         "eq4": {0: ["SC:H/SI:S/SA:S/"], 1: ["SC:H/SI:H/SA:H/"], 2: ["SC:L/SI:L/SA:L/"]},
         "eq5": {0: ["E:A/"], 1: ["E:P/"], 2: ["E:U/"]},
     }
-    _MAX_SEVERITY = {
+    _MAX_SEVERITY: dict[str, Any] = {
         "eq1": {0: 1, 1: 4, 2: 5},
         "eq2": {0: 1, 1: 2},
         "eq3eq6": {0: {0: 7, 1: 6}, 1: {0: 8, 1: 8}, 2: {1: 10}},
@@ -295,7 +293,7 @@ class CVSSv4Scorer:
         """Convenience wrapper: parse a vector string and score it."""
         return self.score(CVSSv4Vector.from_vector_string(vector_string))
 
-    def full_report(self, vector: CVSSv4Vector) -> dict:
+    def full_report(self, vector: CVSSv4Vector) -> dict[str, Any]:
         """Return a complete scoring report dict suitable for JSON serialisation."""
         base, sev = self.score(vector)
         env, env_sev = self.environmental_score(vector)
@@ -319,7 +317,7 @@ class CVSSv4Scorer:
     # ── Score computation internals (MacroVector / lookup / interpolation) ────
 
     @staticmethod
-    def _m(metrics: dict, key: str) -> str:
+    def _m(metrics: dict[str, str], key: str) -> str:
         """Resolve a metric value, applying CVSSv4.0 'not defined' (X) defaults."""
         val = metrics.get(key)
         if key == "E" and val in (None, "X"):
@@ -329,15 +327,18 @@ class CVSSv4Scorer:
         mod = metrics.get("M" + key)
         if mod not in (None, "X"):
             return mod
+        assert val is not None, f"missing required CVSSv4.0 metric: {key}"
         return val
 
     @classmethod
-    def _macro_vector(cls, metrics: dict) -> str:
+    def _macro_vector(cls, metrics: dict[str, str]) -> str:
         m = cls._m
         AV, PR, UI = m(metrics, "AV"), m(metrics, "PR"), m(metrics, "UI")
-        if AV == "N" and PR == "N" and UI == "N":
+        all_none = AV == "N" and PR == "N" and UI == "N"
+        any_none = AV == "N" or PR == "N" or UI == "N"
+        if all_none:
             eq1 = "0"
-        elif (AV == "N" or PR == "N" or UI == "N") and not (AV == "N" and PR == "N" and UI == "N") and AV != "P":
+        elif any_none and not all_none and AV != "P":
             eq1 = "1"
         else:
             eq1 = "2"
@@ -385,7 +386,7 @@ class CVSSv4Scorer:
         "SA": _SA_L, "CR": _CR_L, "IR": _IR_L, "AR": _AR_L,
     }
 
-    def _score(self, metrics: dict) -> float:
+    def _score(self, metrics: dict[str, str]) -> float:
         """
         Score an arbitrary CVSSv4.0 metric dict using the official FIRST
         MacroVector/lookup/interpolation algorithm (ported from
@@ -412,13 +413,16 @@ class CVSSv4Scorer:
         elif eq3 == 1 and eq6 == 0:
             eq3eq6_lower = [f"{eq1}{eq2}{eq3}{eq4}{eq5}{eq6+1}"]
         elif eq3 == 0 and eq6 == 0:
-            eq3eq6_lower = [f"{eq1}{eq2}{eq3}{eq4}{eq5}{eq6+1}", f"{eq1}{eq2}{eq3+1}{eq4}{eq5}{eq6}"]
+            eq3eq6_lower = [
+                f"{eq1}{eq2}{eq3}{eq4}{eq5}{eq6+1}",
+                f"{eq1}{eq2}{eq3+1}{eq4}{eq5}{eq6}",
+            ]
         else:
             eq3eq6_lower = [f"{eq1}{eq2}{eq3+1}{eq4}{eq5}{eq6+1}"]
 
-        score_lower = {k: self._LOOKUP.get(v) for k, v in lower.items()}
-        candidates = [self._LOOKUP.get(k) for k in eq3eq6_lower]
-        candidates = [c for c in candidates if c is not None]
+        score_lower: dict[str, float | None] = {k: self._LOOKUP.get(v) for k, v in lower.items()}
+        raw_candidates = [self._LOOKUP.get(k) for k in eq3eq6_lower]
+        candidates = [c for c in raw_candidates if c is not None]
         score_lower["eq3eq6"] = max(candidates) if candidates else None
 
         eq1_maxes = self._MAX_COMPOSED["eq1"][eq1]
@@ -427,7 +431,7 @@ class CVSSv4Scorer:
         eq4_maxes = self._MAX_COMPOSED["eq4"][eq4]
         eq5_maxes = self._MAX_COMPOSED["eq5"][eq5]
 
-        dists = None
+        dists: dict[str, float] | None = None
         for e1 in eq1_maxes:
             for e2 in eq2_maxes:
                 for e36 in eq3_eq6_maxes:
@@ -435,7 +439,8 @@ class CVSSv4Scorer:
                         for e5 in eq5_maxes:
                             cand = e1 + e2 + e36 + e4 + e5
                             d = {
-                                k: self._LEVELS[k][m(metrics, k)] - self._LEVELS[k][self._extract(k, cand)]
+                                k: self._LEVELS[k][m(metrics, k)]
+                                - self._LEVELS[k][self._extract(k, cand)]
                                 for k in ("AV", "PR", "UI", "AC", "AT", "VC", "VI", "VA",
                                           "SC", "SI", "SA", "CR", "IR", "AR")
                             }
@@ -451,10 +456,14 @@ class CVSSv4Scorer:
             if dists:
                 break
 
+        assert dists is not None, "no severity-distance candidate found for this vector"
         sd = {
             "eq1": dists["AV"] + dists["PR"] + dists["UI"],
             "eq2": dists["AC"] + dists["AT"],
-            "eq3eq6": dists["VC"] + dists["VI"] + dists["VA"] + dists["CR"] + dists["IR"] + dists["AR"],
+            "eq3eq6": (
+                dists["VC"] + dists["VI"] + dists["VA"]
+                + dists["CR"] + dists["IR"] + dists["AR"]
+            ),
             "eq4": dists["SC"] + dists["SI"] + dists["SA"],
             "eq5": 0.0,
         }
@@ -516,7 +525,7 @@ class CVSSv4Scorer:
 _DEFAULT_SCORER = CVSSv4Scorer()
 
 
-def score_preset(preset_key: str, **overrides) -> dict:
+def score_preset(preset_key: str, **overrides: str) -> dict[str, Any]:
     """Score an OWASP preset by key. Returns full report dict."""
     vector = CVSSv4Vector.from_preset(preset_key, **overrides)
     return _DEFAULT_SCORER.full_report(vector)
@@ -529,7 +538,7 @@ def score_vector(vector_string: str) -> tuple[float, str]:
 
 def build_vector(
     owasp_category: str,
-    finding: dict,
+    finding: dict[str, Any],
     deployment_context: str = "general",
 ) -> CVSSv4Vector:
     """

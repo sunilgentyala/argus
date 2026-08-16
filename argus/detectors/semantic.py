@@ -16,8 +16,8 @@ zero-dependency fallback in argus.payloads.synthesizer.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-from typing import Callable, Protocol
+from collections.abc import Callable
+from dataclasses import dataclass
 
 Embedder = Callable[[str], list[float]]
 
@@ -40,7 +40,7 @@ def default_embed_fn(text: str, dims: int = 128) -> list[float]:
 
 
 def _cosine_distance(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     mag_a = math.sqrt(sum(x * x for x in a))
     mag_b = math.sqrt(sum(x * x for x in b))
     if mag_a == 0 or mag_b == 0:
