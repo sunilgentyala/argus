@@ -6,12 +6,13 @@
 [![Version](https://img.shields.io/badge/version-1.1.0-orange)](https://github.com/sunilgentyala/argus/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/sunilgentyala/argus?style=social)](https://github.com/sunilgentyala/argus/stargazers)
 [![Website](https://img.shields.io/badge/website-live-brightgreen)](https://sunilgentyala.github.io/argus/)
+[![IEEE Xplore](https://img.shields.io/badge/IEEE_Xplore-Published-00629B?logo=ieee)](https://ieeexplore.ieee.org/document/11689544)
 
 **Agentic Red-team and Governance Unified Scanner** for LLM security.
 
 ARGUS replaces static probe-and-detect pipelines with a closed-loop multi-agent architecture that reasons about attack strategy, synthesizes novel payloads, evaluates results through a three-layer detection stack, and maps every confirmed finding to CVSSv4.0 vectors and global regulatory frameworks.
 
-> Companion paper, accepted at ICCVBIC 2026 (paper ID ICCVBIC-383): *"ARGUS: An Agentic Red-Team Framework for Autonomous LLM Vulnerability Discovery and Regulatory Compliance Mapping"*, Sunil Gentyala, HCLTech, Dallas TX
+> Companion paper, published in IEEE Xplore: *"Agentic Security Validation Framework for Retrieval-Augmented and Tool-Enabled Large Language Model Systems,"* 2026 7th International Conference on Computational Vision and Bio Inspired Computing (ICCVBIC), DOI: [10.1109/ICCVBIC71195.2026.11689544](https://ieeexplore.ieee.org/document/11689544), Sunil Gentyala, HCLTech, Dallas TX, et al.
 
 **[Live demo site](https://sunilgentyala.github.io/argus/) &middot; [Star on GitHub](https://github.com/sunilgentyala/argus) &middot; [Connect on LinkedIn](https://www.linkedin.com/in/sunilgentyala/)**
 
@@ -265,13 +266,17 @@ Add an entry to `ComplianceMapper` in `argus/compliance/mapper.py` following the
 If you use ARGUS in research or cite this framework, please use:
 
 ```bibtex
-@misc{gentyala2026argus,
-  title        = {{ARGUS}: An Agentic Red-Team Framework for Autonomous {LLM}
-                  Vulnerability Discovery and Regulatory Compliance Mapping},
-  author       = {Gentyala, Sunil},
+@inproceedings{gentyala2026argus,
+  title        = {Agentic Security Validation Framework for Retrieval-Augmented
+                  and Tool-Enabled Large Language Model Systems},
+  author       = {Gentyala, Sunil and Reddy, N. Sudhakar and Deepthi, Kothapalli Chaitanya
+                  and Saroja, Pathapati and Achari, Kammara Venkatarangaiah and Shaik, Ruhisulthana},
+  booktitle    = {2026 7th International Conference on Computational Vision and Bio Inspired Computing (ICCVBIC)},
+  pages        = {1001--1011},
   year         = {2026},
-  institution  = {HCLTech, Dallas TX},
-  note         = {Accepted at ICCVBIC 2026, paper ID ICCVBIC-383. \url{https://github.com/sunilgentyala/argus}}
+  address      = {Lalitpur, Nepal},
+  doi          = {10.1109/ICCVBIC71195.2026.11689544},
+  note         = {\url{https://github.com/sunilgentyala/argus}}
 }
 ```
 
