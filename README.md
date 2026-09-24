@@ -14,7 +14,7 @@ ARGUS replaces static probe-and-detect pipelines with a closed-loop multi-agent 
 
 > Companion paper, published in IEEE Xplore: *"Agentic Security Validation Framework for Retrieval-Augmented and Tool-Enabled Large Language Model Systems,"* 2026 7th International Conference on Computational Vision and Bio Inspired Computing (ICCVBIC), DOI: [10.1109/ICCVBIC71195.2026.11689544](https://ieeexplore.ieee.org/document/11689544), Sunil Gentyala, HCLTech, Dallas TX, et al.
 
-**[Live demo site](https://sunilgentyala.github.io/argus/) &middot; [Star on GitHub](https://github.com/sunilgentyala/argus) &middot; [Connect on LinkedIn](https://www.linkedin.com/in/sunilgentyala/)**
+**[Live demo site](https://sunilgentyala.github.io/argus/) &middot; [Star on GitHub](https://github.com/sunilgentyala/argus) &middot; [Connect on LinkedIn](https://www.linkedin.com/in/sunil-gentyala/)**
 
 ---
 
@@ -294,7 +294,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 Lead Cybersecurity and AI Security Consultant, HCLTech, Dallas, TX, USA
 sunil.gentyala@ieee.org
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://www.linkedin.com/in/sunilgentyala/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://www.linkedin.com/in/sunil-gentyala/)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/sunilgentyala)
 [![Website](https://img.shields.io/badge/Website-sunilgentyala.github.io-orange)](https://sunilgentyala.github.io/argus/)
 
