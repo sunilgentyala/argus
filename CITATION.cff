@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: If you use this software in your research, please cite it as below.
+type: software
+title: 'ARGUS: Agentic Multi-Agent Framework for Autonomous LLM Vulnerability Discovery'
+version: 1.1.0
+date-released: '2026-06-28'
+authors:
+- family-names: Gentyala
+  given-names: Sunil
+  affiliation: HCLTech (HCL America Inc.), Dallas, TX, USA
+  orcid: https://orcid.org/0009-0005-2642-3479
+  email: sunil.gentyala@ieee.org
+repository-code: https://github.com/sunilgentyala/argus
+url: https://sunilgentyala.github.io/argus/
+license: Apache-2.0
+abstract: Agentic multi-agent framework for autonomous LLM vulnerability discovery with CVSS
+  v4.0 scoring, compliance mapping across eight frameworks, and SARIF output, aligned to the
+  OWASP LLM Top 10 (2025).
+keywords:
+- llm-security
+- red-teaming
+- owasp-llm-top-10
+- multi-agent
+- rag-security
+- cvss
+preferred-citation:
+  type: conference-paper
+  title: Agentic Security Validation Framework for Retrieval-Augmented and Tool-Enabled Large
+    Language Model Systems
+  authors:
+  - family-names: Gentyala
+    given-names: Sunil
+    affiliation: HCLTech (HCL America Inc.), Dallas, TX, USA
+    orcid: https://orcid.org/0009-0005-2642-3479
+    email: sunil.gentyala@ieee.org
+  - family-names: Reddy
+    given-names: N. Sudhakar
+  - family-names: Deepthi
+    given-names: Kothapalli Chaitanya
+  - family-names: Saroja
+    given-names: Pathapati
+  - family-names: Achari
+    given-names: Kammara Venkatarangaiah
+  - family-names: Shaik
+    given-names: Ruhisulthana
+  collection-title: 2026 7th International Conference on Computational Vision and Bio Inspired
+    Computing (ICCVBIC)
+  collection-type: proceedings
+  publisher:
+    name: IEEE
+  year: 2026
+  start: 1001
+  end: 1011
+  doi: 10.1109/ICCVBIC71195.2026.11689544
+  url: https://doi.org/10.1109/ICCVBIC71195.2026.11689544
+  conference:
+    name: ICCVBIC 2026
+    location: Lalitpur, Nepal
